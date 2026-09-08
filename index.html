@@ -51,7 +51,7 @@
             margin-left: 10px;
         }
 
-        /* شريط الأقسام الأفقي */
+        /* شريط الأقسام الرئيسي الأفقي */
         .categories-bar {
             background: #1a1a1a;
             border-bottom: 1px solid #333;
@@ -87,6 +87,45 @@
             color: var(--text);
             border-bottom-color: var(--primary);
             background: rgba(229, 9, 20, 0.05);
+        }
+
+        /* شريط التصنيفات الفرعية الأفقي (للمسلسلات والأنمي) */
+        .sub-categories-bar {
+            background: #181818;
+            border-bottom: 1px solid #282828;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0 20px;
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+        .sub-categories-bar::-webkit-scrollbar {
+            height: 3px;
+        }
+        .sub-categories-bar::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        .sub-category-tab {
+            padding: 10px 18px;
+            color: var(--gray);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 2px solid transparent;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sub-category-tab:hover {
+            color: var(--text);
+        }
+        .sub-category-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--primary);
+            background: rgba(229, 9, 20, 0.08);
         }
 
         .container {
@@ -270,6 +309,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .locked-badge {
             background: #d9534f;
@@ -288,6 +329,9 @@
             justify-content: space-between;
             align-items: center;
         }
+        .search-bar-container {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -305,7 +349,7 @@
         </div>
     </header>
 
-    <!-- شريط الأقسام الأفقي -->
+    <!-- شريط الأقسام الرئيسي الأفقي -->
     <div class="categories-bar" id="categoriesBar"></div>
 
     <div class="container">
@@ -339,7 +383,7 @@
                 <!-- القائمة الرئيسية للأزرار -->
                 <div id="adminMenuButtons" class="admin-menu-buttons">
                     <button class="admin-menu-btn" onclick="openAdminSection('sectionsManager')">
-                        <span>إدارة الأقسام (إضافة، تعديل، حذف، وباسورد)</span>
+                        <span>إدارة الأقسام الرئيسية والفرعية</span>
                         <span>📂</span>
                     </button>
                     <button class="admin-menu-btn" onclick="openAdminSection('theme')">
@@ -360,22 +404,41 @@
                     </button>
                 </div>
 
-                <!-- 1. قسم إدارة الأقسام (إضافة، تعديل، حذف، باسورد) -->
+                <!-- 1. قسم إدارة الأقسام الرئيسية والفرعية -->
                 <div id="subSectionSectionsManager" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>إدارة الأقسام</h3>
+                    <h3>إدارة الأقسام الرئيسية</h3>
                     
                     <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
-                        <h4 id="sectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم جديد</h4>
+                        <h4 id="sectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم رئيسي جديد</h4>
                         <input type="hidden" id="editingSectionId" value="">
-                        <input type="text" id="manageSectionNameInput" placeholder="اسم القسم الجديد (مثال: أكشن، رعب)">
+                        <input type="text" id="manageSectionNameInput" placeholder="اسم القسم الرئيسي (مثال: المسلسلات، الأنمي)">
                         <input type="password" id="manageSectionPassInput" placeholder="كلمة المرور الخاصة بالقسم (اتركها فارغة بدون كلمة مرور)">
-                        <button class="action-btn" id="saveSectionBtn" onclick="saveSectionData()">حفظ القسم</button>
-                        <button class="action-btn id-cancel hidden" id="cancelEditSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSectionForm()">إلغاء التعديل</button>
+                        <button class="action-btn" id="saveSectionBtn" onclick="saveSectionData()">حفظ القسم الرئيسي</button>
+                        <button class="action-btn hidden" id="cancelEditSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSectionForm()">إلغاء التعديل</button>
                     </div>
 
-                    <h4>الأقسام الحالية:</h4>
-                    <div id="adminSectionsList" style="max-height: 250px; overflow-y: auto; margin-top: 10px;"></div>
+                    <h4>الأقسام الرئيسية الحالية:</h4>
+                    <div id="adminSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px; margin-bottom: 20px;"></div>
+
+                    <hr style="border-color: #333; margin: 15px 0;">
+
+                    <!-- إدارة الأقسام الفرعية (للمسلسلات والأنمي) -->
+                    <h3>إدارة الأقسام الفرعية (تحت المسلسلات أو الأنمي)</h3>
+                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+                        <h4 id="subSectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم فرعي جديد</h4>
+                        <input type="hidden" id="editingSubSectionId" value="">
+                        
+                        <label style="font-size:13px; color:var(--gray);">اختر القسم الرئيسي التابع له:</label>
+                        <select id="parentSectionSelectForSub" style="margin-top:5px; margin-bottom:10px;"></select>
+                        
+                        <input type="text" id="manageSubSectionNameInput" placeholder="اسم القسم الفرعي (مثال: مسلسلات تركية، ناروتو)">
+                        <button class="action-btn" id="saveSubSectionBtn" onclick="saveSubSectionData()">حفظ القسم الفرعي</button>
+                        <button class="action-btn hidden" id="cancelEditSubSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSubSectionForm()">إلغاء التعديل</button>
+                    </div>
+
+                    <h4>الأقسام الفرعية الحالية:</h4>
+                    <div id="adminSubSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px;"></div>
                 </div>
 
                 <!-- 2. قسم تغيير الألوان والخلفية -->
@@ -411,7 +474,15 @@
                 <div id="subSectionContent" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
                     <h3>نشر الصور والفيديوهات</h3>
-                    <select id="contentSectionSelect"></select>
+                    
+                    <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الرئيسي:</label>
+                    <select id="contentSectionSelect" onchange="populateSubSectionSelectForPublish()"></select>
+                    
+                    <div id="subSectionPublishContainer" class="hidden">
+                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الفرعي:</label>
+                        <select id="contentSubSectionSelect"></select>
+                    </div>
+
                     <input type="text" id="contentTitle" placeholder="عنوان المحتوى">
                     <textarea id="contentDesc" placeholder="وصف المحتوى"></textarea>
                     
@@ -452,6 +523,8 @@
         let currentUser = JSON.parse(localStorage.getItem('esultan_current_user')) || null;
         let isLoginMode = true;
         let activeSectionId = null;
+        let activeSubSectionId = null;
+        let currentSearchQuery = '';
         const unlockedSections = new Set();
 
         if (!localStorage.getItem('esultan_sections')) {
@@ -462,6 +535,16 @@
                 { id: 'sec_4', name: 'كرتون', locked: false, password: '' }
             ];
             localStorage.setItem('esultan_sections', JSON.stringify(defaultSections));
+        }
+
+        if (!localStorage.getItem('esultan_sub_sections')) {
+            const defaultSubSections = [
+                { id: 'sub_1', parentSectionId: 'sec_2', name: 'مسلسلات تركية' },
+                { id: 'sub_2', parentSectionId: 'sec_2', name: 'مسلسلات رمضان' },
+                { id: 'sub_3', parentSectionId: 'sec_3', name: 'أنمي أكشن' },
+                { id: 'sub_4', parentSectionId: 'sec_3', name: 'أنمي غموض' }
+            ];
+            localStorage.setItem('esultan_sub_sections', JSON.stringify(defaultSubSections));
         }
 
         if (!localStorage.getItem('esultan_contents')) {
@@ -490,6 +573,17 @@
             }
         }
 
+        function initActiveSubSection(sectionId) {
+            let subSections = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === sectionId);
+            if(subSections.length > 0) {
+                if(!activeSubSectionId || !subSections.some(sub => sub.id === activeSubSectionId)) {
+                    activeSubSectionId = subSections[0].id;
+                }
+            } else {
+                activeSubSectionId = null;
+            }
+        }
+
         function renderCategoriesBar() {
             const bar = document.getElementById('categoriesBar');
             bar.innerHTML = '';
@@ -501,6 +595,8 @@
                 tab.innerHTML = `${sec.name} ${sec.locked && !unlockedSections.has(sec.id) ? '🔒' : ''}`;
                 tab.onclick = function() {
                     activeSectionId = sec.id;
+                    currentSearchQuery = '';
+                    initActiveSubSection(sec.id);
                     renderCategoriesBar();
                     renderAppContent();
                 };
@@ -619,9 +715,10 @@
         function openAdminPanel() {
             document.getElementById('adminOverlay').classList.remove('hidden');
             backToAdminMenu();
-            populateSectionSelect();
+            populateSectionSelects();
             renderAdminSuggestions();
             renderAdminSectionsList();
+            renderAdminSubSectionsList();
         }
 
         function closeAdminPanel() {
@@ -639,6 +736,8 @@
             if(sectionName === 'sectionsManager') {
                 document.getElementById('subSectionSectionsManager').classList.remove('hidden');
                 renderAdminSectionsList();
+                renderAdminSubSectionsList();
+                populateSectionSelects();
             } else if(sectionName === 'theme') {
                 document.getElementById('subSectionTheme').classList.remove('hidden');
             } else if(sectionName === 'sitename') {
@@ -647,6 +746,7 @@
                 document.getElementById('subSectionSuggestions').classList.remove('hidden');
             } else if(sectionName === 'content') {
                 document.getElementById('subSectionContent').classList.remove('hidden');
+                populateSectionSelects();
             }
         }
 
@@ -658,15 +758,16 @@
             document.getElementById('subSectionSuggestions').classList.add('hidden');
             document.getElementById('subSectionContent').classList.add('hidden');
             resetSectionForm();
+            resetSubSectionForm();
         }
 
-        // إدارة الأقسام (إضافة وتعديل وحذف وباسورد)
+        // إدارة الأقسام الرئيسية
         function renderAdminSectionsList() {
             const listContainer = document.getElementById('adminSectionsList');
             let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
 
             if (sections.length === 0) {
-                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام حالياً.</p>';
+                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام رئيسية حالياً.</p>';
                 return;
             }
 
@@ -676,14 +777,14 @@
                 div.className = 'section-manage-item';
                 div.innerHTML = `
                     <div>
-                        <span style="font-weight: bold; font-size: 15px;">${sec.name}</span>
-                        <div style="font-size: 12px; color: ${sec.locked ? '#d9534f' : 'var(--gray);'} margin-top: 2px;">
-                            ${sec.locked ? `مغلق بكلمة مرور: (${sec.password})` : 'بدون كلمة مرور (مفتوح)'}
+                        <span style="font-weight: bold; font-size: 14px;">${sec.name}</span>
+                        <div style="font-size: 11px; color: ${sec.locked ? '#d9534f' : 'var(--gray);'} margin-top: 2px;">
+                            ${sec.locked ? `مغلق بكلمة مرور: (${sec.password})` : 'بدون كلمة مرور'}
                         </div>
                     </div>
                     <div style="display: flex; gap: 6px;">
-                        <button onclick="editSection('${sec.id}')" style="background:#337ab7; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
-                        <button onclick="deleteSection('${sec.id}')" style="background:#d9534f; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
+                        <button onclick="editSection('${sec.id}')" style="background:#337ab7; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
+                        <button onclick="deleteSection('${sec.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
                     </div>
                 `;
                 listContainer.appendChild(div);
@@ -696,23 +797,21 @@
             const password = document.getElementById('manageSectionPassInput').value.trim();
 
             if (!name) {
-                alert('الرجاء كتابة اسم القسم!');
+                alert('الرجاء كتابة اسم القسم الرئيسي!');
                 return;
             }
 
             let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
 
             if (secId) {
-                // تعديل قسم موجود
                 let sec = sections.find(s => s.id === secId);
                 if (sec) {
                     sec.name = name;
                     sec.password = password;
                     sec.locked = password !== '';
                 }
-                alert('تم تعديل القسم بنجاح!');
+                alert('تم تعديل القسم الرئيسي بنجاح!');
             } else {
-                // إضافة قسم جديد
                 const newId = 'sec_' + Date.now();
                 sections.push({
                     id: newId,
@@ -720,13 +819,14 @@
                     locked: password !== '',
                     password: password
                 });
-                alert('تم إضافة القسم بنجاح!');
+                alert('تم إضافة القسم الرئيسي بنجاح!');
             }
 
             localStorage.setItem('esultan_sections', JSON.stringify(sections));
             resetSectionForm();
             renderAdminSectionsList();
             renderCategoriesBar();
+            populateSectionSelects();
             renderAppContent();
         }
 
@@ -737,7 +837,7 @@
                 document.getElementById('editingSectionId').value = sec.id;
                 document.getElementById('manageSectionNameInput').value = sec.name;
                 document.getElementById('manageSectionPassInput').value = sec.password || '';
-                document.getElementById('sectionFormTitle').innerText = 'تعديل بيانات القسم';
+                document.getElementById('sectionFormTitle').innerText = 'تعديل القسم الرئيسي';
                 document.getElementById('saveSectionBtn').innerText = 'حفظ التعديلات';
                 document.getElementById('cancelEditSectionBtn').classList.remove('hidden');
             }
@@ -747,23 +847,26 @@
             document.getElementById('editingSectionId').value = '';
             document.getElementById('manageSectionNameInput').value = '';
             document.getElementById('manageSectionPassInput').value = '';
-            document.getElementById('sectionFormTitle').innerText = 'إضافة قسم جديد';
-            document.getElementById('saveSectionBtn').innerText = 'حفظ القسم';
+            document.getElementById('sectionFormTitle').innerText = 'إضافة قسم رئيسي جديد';
+            document.getElementById('saveSectionBtn').innerText = 'حفظ القسم الرئيسي';
             document.getElementById('cancelEditSectionBtn').classList.add('hidden');
         }
 
         function deleteSection(id) {
             let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
             if (sections.length <= 1) {
-                alert('لا يمكنك حذف جميع الأقسام، يجب أن يبقى قسم واحد على الأقل!');
+                alert('لا يمكنك حذف جميع الأقسام الرئيسية!');
                 return;
             }
 
-            if (confirm('هل أنت متأكد من حذف هذا القسم؟ سيتم حذف كافة المحتويات التابعة له أيضاً!')) {
+            if (confirm('هل أنت متأكد من حذف هذا القسم الرئيسي؟ سيتم حذف الأقسام الفرعية والمحتويات التابعة له أيضاً!')) {
                 sections = sections.filter(s => s.id !== id);
                 localStorage.setItem('esultan_sections', JSON.stringify(sections));
 
-                // حذف المحتويات التابعة للقسم المحذوف
+                let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+                subSections = subSections.filter(sub => sub.parentSectionId !== id);
+                localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
+
                 let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
                 contents = contents.filter(c => c.sectionId !== id);
                 localStorage.setItem('esultan_contents', JSON.stringify(contents));
@@ -771,9 +874,114 @@
                 unlockedSections.delete(id);
                 initActiveSection();
                 renderAdminSectionsList();
+                renderAdminSubSectionsList();
                 renderCategoriesBar();
+                populateSectionSelects();
                 renderAppContent();
                 alert('تم حذف القسم بنجاح.');
+            }
+        }
+
+        // إدارة الأقسام الفرعية
+        function renderAdminSubSectionsList() {
+            const listContainer = document.getElementById('adminSubSectionsList');
+            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+
+            if (subSections.length === 0) {
+                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام فرعية حالياً.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            subSections.forEach(sub => {
+                let parent = sections.find(s => s.id === sub.parentSectionId);
+                let parentName = parent ? parent.name : 'غير معروف';
+                const div = document.createElement('div');
+                div.className = 'section-manage-item';
+                div.innerHTML = `
+                    <div>
+                        <span style="font-weight: bold; font-size: 14px;">${sub.name}</span>
+                        <div style="font-size: 11px; color: var(--gray); margin-top: 2px;">القسم الرئيسي: ${parentName}</div>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button onclick="editSubSection('${sub.id}')" style="background:#337ab7; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
+                        <button onclick="deleteSubSection('${sub.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function saveSubSectionData() {
+            const subId = document.getElementById('editingSubSectionId').value;
+            const parentId = document.getElementById('parentSectionSelectForSub').value;
+            const name = document.getElementById('manageSubSectionNameInput').value.trim();
+
+            if (!name || !parentId) {
+                alert('الرجاء اختيار القسم الرئيسي وكتابة اسم القسم الفرعي!');
+                return;
+            }
+
+            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+
+            if (subId) {
+                let sub = subSections.find(s => s.id === subId);
+                if (sub) {
+                    sub.parentSectionId = parentId;
+                    sub.name = name;
+                }
+                alert('تم تعديل القسم الفرعي بنجاح!');
+            } else {
+                const newId = 'sub_' + Date.now();
+                subSections.push({
+                    id: newId,
+                    parentSectionId: parentId,
+                    name: name
+                });
+                alert('تم إضافة القسم الفرعي بنجاح!');
+            }
+
+            localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
+            resetSubSectionForm();
+            renderAdminSubSectionsList();
+            renderAppContent();
+        }
+
+        function editSubSection(id) {
+            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+            let sub = subSections.find(s => s.id === id);
+            if (sub) {
+                document.getElementById('editingSubSectionId').value = sub.id;
+                document.getElementById('parentSectionSelectForSub').value = sub.parentSectionId;
+                document.getElementById('manageSubSectionNameInput').value = sub.name;
+                document.getElementById('subSectionFormTitle').innerText = 'تعديل القسم الفرعي';
+                document.getElementById('saveSubSectionBtn').innerText = 'حفظ التعديلات';
+                document.getElementById('cancelEditSubSectionBtn').classList.remove('hidden');
+            }
+        }
+
+        function resetSubSectionForm() {
+            document.getElementById('editingSubSectionId').value = '';
+            document.getElementById('manageSubSectionNameInput').value = '';
+            document.getElementById('subSectionFormTitle').innerText = 'إضافة قسم فرعي جديد';
+            document.getElementById('saveSubSectionBtn').innerText = 'حفظ القسم الفرعي';
+            document.getElementById('cancelEditSubSectionBtn').classList.add('hidden');
+        }
+
+        function deleteSubSection(id) {
+            if (confirm('هل أنت متأكد من حذف هذا القسم الفرعي؟ سيتم حذف محتوياته أيضاً!')) {
+                let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+                subSections = subSections.filter(s => s.id !== id);
+                localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
+
+                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+                contents = contents.filter(c => c.subSectionId !== id);
+                localStorage.setItem('esultan_contents', JSON.stringify(contents));
+
+                renderAdminSubSectionsList();
+                renderAppContent();
+                alert('تم حذف القسم الفرعي بنجاح.');
             }
         }
 
@@ -886,20 +1094,61 @@
             }
         }
 
-        function populateSectionSelect() {
+        function populateSectionSelects() {
             let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            let select = document.getElementById('contentSectionSelect');
-            select.innerHTML = '';
+            
+            // سيلكت الأقسام الفرعية للإدارة
+            let selSubParent = document.getElementById('parentSectionSelectForSub');
+            selSubParent.innerHTML = '';
             sections.forEach(sec => {
                 let opt = document.createElement('option');
                 opt.value = sec.id;
                 opt.innerText = sec.name;
-                select.appendChild(opt);
+                selSubParent.appendChild(opt);
             });
+
+            // سيلكت النشر الرئيسي
+            let selPub = document.getElementById('contentSectionSelect');
+            selPub.innerHTML = '';
+            sections.forEach(sec => {
+                let opt = document.createElement('option');
+                opt.value = sec.id;
+                opt.innerText = sec.name;
+                selPub.appendChild(opt);
+            });
+            populateSubSectionSelectForPublish();
+        }
+
+        function populateSubSectionSelectForPublish() {
+            const parentId = document.getElementById('contentSectionSelect').value;
+            const subContainer = document.getElementById('subSectionPublishContainer');
+            let subSelect = document.getElementById('contentSubSectionSelect');
+            subSelect.innerHTML = '';
+
+            let subSections = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === parentId);
+
+            if (subSections.length > 0) {
+                subContainer.classList.remove('hidden');
+                subSections.forEach(sub => {
+                    let opt = document.createElement('option');
+                    opt.value = sub.id;
+                    opt.innerText = sub.name;
+                    subSelect.appendChild(opt);
+                });
+            } else {
+                subContainer.classList.add('hidden');
+            }
         }
 
         function publishContent() {
             const sectionId = document.getElementById('contentSectionSelect').value;
+            const subContainer = document.getElementById('subSectionPublishContainer');
+            let subSectionId = null;
+
+            if (!subContainer.classList.contains('hidden')) {
+                subSectionId = document.getElementById('contentSubSectionSelect').value;
+            }
+
             const title = document.getElementById('contentTitle').value.trim();
             const desc = document.getElementById('contentDesc').value.trim();
             const imgFile = document.getElementById('contentImage').files[0];
@@ -922,6 +1171,7 @@
                     contents.push({
                         id: Date.now(),
                         sectionId: sectionId,
+                        subSectionId: subSectionId,
                         title: title,
                         desc: desc,
                         image: imgData,
@@ -941,6 +1191,7 @@
                     document.getElementById('vidFileName').style.color = 'var(--gray)';
                     
                     activeSectionId = sectionId;
+                    if(subSectionId) activeSubSectionId = subSectionId;
                     renderCategoriesBar();
                     renderAppContent();
                 };
@@ -963,6 +1214,7 @@
             area.innerHTML = '';
 
             let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
             let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
 
             if(sections.length === 0 || !activeSectionId) {
@@ -994,9 +1246,54 @@
                     </div>
                 `;
             } else {
-                const secContents = contents.filter(c => c.sectionId === currentSec.id);
+                // فلترة الأقسام الفرعية التابعة لهذا القسم الرئيسي
+                const currentSubSections = subSections.filter(sub => sub.parentSectionId === currentSec.id);
+
+                if (currentSubSections.length > 0) {
+                    if (!activeSubSectionId || !currentSubSections.some(sub => sub.id === activeSubSectionId)) {
+                        activeSubSectionId = currentSubSections[0].id;
+                    }
+
+                    // شريط الأقسام الفرعية الأفقي
+                    const subBar = document.createElement('div');
+                    subBar.className = 'sub-categories-bar';
+                    currentSubSections.forEach(sub => {
+                        const tab = document.createElement('div');
+                        tab.className = `sub-category-tab ${sub.id === activeSubSectionId ? 'active' : ''}`;
+                        tab.innerText = sub.name;
+                        tab.onclick = function() {
+                            activeSubSectionId = sub.id;
+                            currentSearchQuery = '';
+                            renderAppContent();
+                        };
+                        subBar.appendChild(tab);
+                    });
+                    secDiv.appendChild(subBar);
+                } else {
+                    activeSubSectionId = null;
+                }
+
+                // شريط البحث الخاص بالقسم الحالي
+                const searchContainer = document.createElement('div');
+                searchContainer.className = 'search-bar-container';
+                searchContainer.innerHTML = `
+                    <input type="text" id="searchInput" placeholder="ابحث داخل هذا القسم..." value="${currentSearchQuery}" oninput="handleSearchInput(this.value)">
+                `;
+                secDiv.appendChild(searchContainer);
+
+                // فلترة المحتوى حسب القسم الرئيسي، القسم الفرعي، ونص البحث
+                let secContents = contents.filter(c => c.sectionId === currentSec.id);
+                if (activeSubSectionId) {
+                    secContents = secContents.filter(c => c.subSectionId === activeSubSectionId);
+                }
+
+                if (currentSearchQuery.trim() !== '') {
+                    const q = currentSearchQuery.toLowerCase();
+                    secContents = secContents.filter(c => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q));
+                }
+
                 if(secContents.length === 0) {
-                    secDiv.innerHTML += `<p style="color:var(--gray); margin-top: 15px;">لا يوجد محتوى منشور في هذا القسم حتى الآن.</p>`;
+                    secDiv.innerHTML += `<p style="color:var(--gray); margin-top: 15px;">لا يوجد محتوى مطابق في هذا القسم.</p>`;
                 } else {
                     const gridDiv = document.createElement('div');
                     gridDiv.className = 'grid';
@@ -1020,6 +1317,23 @@
             }
 
             area.appendChild(secDiv);
+        }
+
+        function handleSearchInput(val) {
+            currentSearchQuery = val;
+            // إعادة عرض المحتوى بسلاسة مع الحفاظ على التركيز في خانة البحث
+            const currentSubId = activeSubSectionId;
+            const currentActiveSec = activeSectionId;
+            renderAppContent();
+            
+            // إعادة التركيز على خانة البحث واستعادة مؤشر الكتابة في نهايتها
+            setTimeout(() => {
+                const input = document.getElementById('searchInput');
+                if (input) {
+                    input.focus();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
+            }, 0);
         }
 
         function verifySectionPassword(secId) {
