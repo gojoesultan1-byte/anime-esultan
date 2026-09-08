@@ -102,7 +102,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* نافذة لوحة المشرف المنبثقة (تفتح فوق الواجهة الأساسية بالكامل) */
+        /* نافذة لوحة المشرف المنبثقة */
         .admin-overlay {
             position: fixed;
             top: 0;
@@ -120,7 +120,7 @@
         .admin-modal {
             background: var(--card-bg);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
@@ -136,7 +136,6 @@
             border-radius: 3px;
         }
 
-        /* أزرار واجهة لوحة المشرف الرئيسية */
         .admin-menu-buttons {
             display: flex;
             flex-direction: column;
@@ -162,7 +161,6 @@
             background: #2b2b2b;
         }
 
-        /* الأقسام الفرعية داخل لوحة المشرف */
         .admin-sub-section {
             background: #252525;
             padding: 20px;
@@ -280,12 +278,15 @@
             border-radius: 4px;
             font-size: 12px;
         }
-        .suggestion-item {
+        .suggestion-item, .section-manage-item {
             background: #1e1e1e;
             padding: 12px;
             border-radius: 4px;
             margin-bottom: 10px;
             border: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
@@ -327,7 +328,7 @@
             <button class="action-btn" style="background: #444; margin-top: 8px;" onclick="document.getElementById('suggestionBoxContainer').classList.add('hidden')">إلغاء</button>
         </div>
 
-        <!-- نافذة لوحة تحكم المشرف المنبثقة فوق الواجهة الأساسية -->
+        <!-- نافذة لوحة تحكم المشرف المنبثقة -->
         <div id="adminOverlay" class="admin-overlay hidden">
             <div class="admin-modal">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -335,8 +336,12 @@
                     <button onclick="closeAdminPanel()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
                 </div>
 
-                <!-- القائمة الرئيسية للأزرار (مرصوصة تحت بعضها وليست بجانب بعضها) -->
+                <!-- القائمة الرئيسية للأزرار -->
                 <div id="adminMenuButtons" class="admin-menu-buttons">
+                    <button class="admin-menu-btn" onclick="openAdminSection('sectionsManager')">
+                        <span>إدارة الأقسام (إضافة، تعديل، حذف، وباسورد)</span>
+                        <span>📂</span>
+                    </button>
                     <button class="admin-menu-btn" onclick="openAdminSection('theme')">
                         <span>تغيير ألوان وخلفية الموقع</span>
                         <span>🎨</span>
@@ -355,7 +360,25 @@
                     </button>
                 </div>
 
-                <!-- 1. قسم تغيير الألوان والخلفية -->
+                <!-- 1. قسم إدارة الأقسام (إضافة، تعديل، حذف، باسورد) -->
+                <div id="subSectionSectionsManager" class="admin-sub-section hidden">
+                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+                    <h3>إدارة الأقسام</h3>
+                    
+                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+                        <h4 id="sectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم جديد</h4>
+                        <input type="hidden" id="editingSectionId" value="">
+                        <input type="text" id="manageSectionNameInput" placeholder="اسم القسم الجديد (مثال: أكشن، رعب)">
+                        <input type="password" id="manageSectionPassInput" placeholder="كلمة المرور الخاصة بالقسم (اتركها فارغة بدون كلمة مرور)">
+                        <button class="action-btn" id="saveSectionBtn" onclick="saveSectionData()">حفظ القسم</button>
+                        <button class="action-btn id-cancel hidden" id="cancelEditSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSectionForm()">إلغاء التعديل</button>
+                    </div>
+
+                    <h4>الأقسام الحالية:</h4>
+                    <div id="adminSectionsList" style="max-height: 250px; overflow-y: auto; margin-top: 10px;"></div>
+                </div>
+
+                <!-- 2. قسم تغيير الألوان والخلفية -->
                 <div id="subSectionTheme" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
                     <h3>تغيير ألوان وخلفية الموقع</h3>
@@ -367,7 +390,7 @@
                     <button class="action-btn" onclick="updateSiteTheme()">حفظ وتطبيق الألوان والخلفية</button>
                 </div>
 
-                <!-- 2. قسم تغيير اسم الموقع -->
+                <!-- 3. قسم تغيير اسم الموقع -->
                 <div id="subSectionSiteName" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
                     <h3>تغيير اسم الموقع</h3>
@@ -375,7 +398,7 @@
                     <button class="action-btn" onclick="updateSiteName()">تحديث اسم الموقع</button>
                 </div>
 
-                <!-- 3. قسم عرض الاقتراحات -->
+                <!-- 4. قسم عرض الاقتراحات -->
                 <div id="subSectionSuggestions" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
                     <h3>اقتراحات المستخدمين المستلمة</h3>
@@ -384,7 +407,7 @@
                     </div>
                 </div>
 
-                <!-- 4. قسم نشر الصور والفيديوهات -->
+                <!-- 5. قسم نشر الصور والفيديوهات -->
                 <div id="subSectionContent" class="admin-sub-section hidden">
                     <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
                     <h3>نشر الصور والفيديوهات</h3>
@@ -593,27 +616,30 @@
             }
         }
 
-        // التحكم في فتح وإغلاق لوحة المشرف المنبثقة
         function openAdminPanel() {
             document.getElementById('adminOverlay').classList.remove('hidden');
             backToAdminMenu();
             populateSectionSelect();
             renderAdminSuggestions();
+            renderAdminSectionsList();
         }
 
         function closeAdminPanel() {
             document.getElementById('adminOverlay').classList.add('hidden');
         }
 
-        // التنقل داخل نافذة المشرف (عرض قسم واحد بناءً على الزرار المضغوط)
         function openAdminSection(sectionName) {
             document.getElementById('adminMenuButtons').classList.add('hidden');
+            document.getElementById('subSectionSectionsManager').classList.add('hidden');
             document.getElementById('subSectionTheme').classList.add('hidden');
             document.getElementById('subSectionSiteName').classList.add('hidden');
             document.getElementById('subSectionSuggestions').classList.add('hidden');
             document.getElementById('subSectionContent').classList.add('hidden');
 
-            if(sectionName === 'theme') {
+            if(sectionName === 'sectionsManager') {
+                document.getElementById('subSectionSectionsManager').classList.remove('hidden');
+                renderAdminSectionsList();
+            } else if(sectionName === 'theme') {
                 document.getElementById('subSectionTheme').classList.remove('hidden');
             } else if(sectionName === 'sitename') {
                 document.getElementById('subSectionSiteName').classList.remove('hidden');
@@ -626,10 +652,129 @@
 
         function backToAdminMenu() {
             document.getElementById('adminMenuButtons').classList.remove('hidden');
+            document.getElementById('subSectionSectionsManager').classList.add('hidden');
             document.getElementById('subSectionTheme').classList.add('hidden');
             document.getElementById('subSectionSiteName').classList.add('hidden');
             document.getElementById('subSectionSuggestions').classList.add('hidden');
             document.getElementById('subSectionContent').classList.add('hidden');
+            resetSectionForm();
+        }
+
+        // إدارة الأقسام (إضافة وتعديل وحذف وباسورد)
+        function renderAdminSectionsList() {
+            const listContainer = document.getElementById('adminSectionsList');
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+
+            if (sections.length === 0) {
+                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام حالياً.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            sections.forEach(sec => {
+                const div = document.createElement('div');
+                div.className = 'section-manage-item';
+                div.innerHTML = `
+                    <div>
+                        <span style="font-weight: bold; font-size: 15px;">${sec.name}</span>
+                        <div style="font-size: 12px; color: ${sec.locked ? '#d9534f' : 'var(--gray);'} margin-top: 2px;">
+                            ${sec.locked ? `مغلق بكلمة مرور: (${sec.password})` : 'بدون كلمة مرور (مفتوح)'}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button onclick="editSection('${sec.id}')" style="background:#337ab7; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
+                        <button onclick="deleteSection('${sec.id}')" style="background:#d9534f; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function saveSectionData() {
+            const secId = document.getElementById('editingSectionId').value;
+            const name = document.getElementById('manageSectionNameInput').value.trim();
+            const password = document.getElementById('manageSectionPassInput').value.trim();
+
+            if (!name) {
+                alert('الرجاء كتابة اسم القسم!');
+                return;
+            }
+
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+
+            if (secId) {
+                // تعديل قسم موجود
+                let sec = sections.find(s => s.id === secId);
+                if (sec) {
+                    sec.name = name;
+                    sec.password = password;
+                    sec.locked = password !== '';
+                }
+                alert('تم تعديل القسم بنجاح!');
+            } else {
+                // إضافة قسم جديد
+                const newId = 'sec_' + Date.now();
+                sections.push({
+                    id: newId,
+                    name: name,
+                    locked: password !== '',
+                    password: password
+                });
+                alert('تم إضافة القسم بنجاح!');
+            }
+
+            localStorage.setItem('esultan_sections', JSON.stringify(sections));
+            resetSectionForm();
+            renderAdminSectionsList();
+            renderCategoriesBar();
+            renderAppContent();
+        }
+
+        function editSection(id) {
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            let sec = sections.find(s => s.id === id);
+            if (sec) {
+                document.getElementById('editingSectionId').value = sec.id;
+                document.getElementById('manageSectionNameInput').value = sec.name;
+                document.getElementById('manageSectionPassInput').value = sec.password || '';
+                document.getElementById('sectionFormTitle').innerText = 'تعديل بيانات القسم';
+                document.getElementById('saveSectionBtn').innerText = 'حفظ التعديلات';
+                document.getElementById('cancelEditSectionBtn').classList.remove('hidden');
+            }
+        }
+
+        function resetSectionForm() {
+            document.getElementById('editingSectionId').value = '';
+            document.getElementById('manageSectionNameInput').value = '';
+            document.getElementById('manageSectionPassInput').value = '';
+            document.getElementById('sectionFormTitle').innerText = 'إضافة قسم جديد';
+            document.getElementById('saveSectionBtn').innerText = 'حفظ القسم';
+            document.getElementById('cancelEditSectionBtn').classList.add('hidden');
+        }
+
+        function deleteSection(id) {
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            if (sections.length <= 1) {
+                alert('لا يمكنك حذف جميع الأقسام، يجب أن يبقى قسم واحد على الأقل!');
+                return;
+            }
+
+            if (confirm('هل أنت متأكد من حذف هذا القسم؟ سيتم حذف كافة المحتويات التابعة له أيضاً!')) {
+                sections = sections.filter(s => s.id !== id);
+                localStorage.setItem('esultan_sections', JSON.stringify(sections));
+
+                // حذف المحتويات التابعة للقسم المحذوف
+                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+                contents = contents.filter(c => c.sectionId !== id);
+                localStorage.setItem('esultan_contents', JSON.stringify(contents));
+
+                unlockedSections.delete(id);
+                initActiveSection();
+                renderAdminSectionsList();
+                renderCategoriesBar();
+                renderAppContent();
+                alert('تم حذف القسم بنجاح.');
+            }
         }
 
         function showSuggestionModal() {
@@ -672,9 +817,11 @@
                 const div = document.createElement('div');
                 div.className = 'suggestion-item';
                 div.innerHTML = `
-                    <div style="font-size: 13px; color: var(--primary); margin-bottom: 4px;">من: ${item.user} (${item.date})</div>
-                    <div style="font-size: 14px; margin-bottom: 8px;">${item.text}</div>
-                    <button onclick="deleteSuggestion(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف الاقتراح</button>
+                    <div>
+                        <div style="font-size: 13px; color: var(--primary); margin-bottom: 4px;">من: ${item.user} (${item.date})</div>
+                        <div style="font-size: 14px; margin-bottom: 8px;">${item.text}</div>
+                    </div>
+                    <button onclick="deleteSuggestion(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
                 `;
                 listContainer.appendChild(div);
             });
@@ -824,7 +971,11 @@
             }
 
             const currentSec = sections.find(s => s.id === activeSectionId);
-            if(!currentSec) return;
+            if(!currentSec) {
+                activeSectionId = sections[0].id;
+                renderAppContent();
+                return;
+            }
 
             const secDiv = document.createElement('div');
             secDiv.className = 'auth-box';
@@ -852,7 +1003,7 @@
 
                     secContents.forEach(item => {
                         const card = document.createElement('div');
-                        card.className, 'card';
+                        card.className = 'card';
                         card.innerHTML = `
                             <img src="${item.image}" alt="${item.title}">
                             <video controls src="${item.video}"></video>
