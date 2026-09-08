@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">esultan anime</title>
+    <style>
+        :root {
+            --primary: #e50914;
+            --bg: #141414;
+            --card-bg: #1f1f1f;
+            --text: #ffffff;
+            --gray: #808080;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        .nav-btns button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* شريط الأقسام الأفقي */
+        .categories-bar {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0 20px;
+            scroll-behavior: smooth;
+        }
+        .categories-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .categories-bar::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        .category-tab {
+            padding: 15px 20px;
+            color: var(--gray);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            border-bottom: 3px solid transparent;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-tab:hover {
+            color: var(--text);
+        }
+        .category-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--primary);
+            background: rgba(229, 9, 20, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+        .auth-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* نافذة لوحة المشرف المنبثقة (تفتح فوق الواجهة الأساسية بالكامل) */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .admin-modal {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid #333;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .admin-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+        .admin-modal::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* أزرار واجهة لوحة المشرف الرئيسية */
+        .admin-menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .admin-menu-btn {
+            background: #252525;
+            color: white;
+            border: 1px solid #444;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: right;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-menu-btn:hover {
+            border-color: var(--primary);
+            background: #2b2b2b;
+        }
+
+        /* الأقسام الفرعية داخل لوحة المشرف */
+        .admin-sub-section {
+            background: #252525;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+        .back-to-admin-menu {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .back-to-admin-menu:hover {
+            background: #444;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #2b2b2b;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+        }
+        
+        .upload-box {
+            border: 2px dashed #444;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 0;
+            background: #222;
+            transition: 0.3s;
+        }
+        .upload-box:hover {
+            border-color: var(--primary);
+            background: #282828;
+        }
+        .upload-box p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button.action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button.action-btn:hover {
+            opacity: 0.9;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: #222;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .card video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .card-desc {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .locked-badge {
+            background: #d9534f;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .suggestion-item {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <!-- الهيدر -->
+    <header>
+        <div class="logo" id="siteLogoText">esultan anime</div>
+        <div class="nav-btns">
+            <span id="userWelcome" style="margin-left: 15px; font-size: 14px;"></span>
+            <button id="loginNavBtn" onclick="showAuth('login')">تسجيل الدخول</button>
+            <button id="registerNavBtn" onclick="showAuth('register')">إنشاء حساب</button>
+            <button id="adminNavBtn" class="hidden" onclick="openAdminPanel()">لوحة المشرف</button>
+            <button id="suggestionUserBtn" class="hidden" onclick="showSuggestionModal()" style="background:#333; border:1px solid #555;">اقتراحك</button>
+            <button id="logoutBtn" class="hidden" onclick="confirmLogout()">خروج</button>
+        </div>
+    </header>
+
+    <!-- شريط الأقسام الأفقي -->
+    <div class="categories-bar" id="categoriesBar"></div>
+
+    <div class="container">
+
+        <!-- واجهة تسجيل الدخول -->
+        <div id="authContainer" class="auth-box hidden">
+            <h2 id="authTitle" style="margin-bottom: 20px;">تسجيل الدخول</h2>
+            <input type="email" id="authEmail" placeholder="البريد الإلكتروني">
+            <input type="password" id="authPassword" placeholder="كلمة المرور">
+            <button class="action-btn" onclick="handleAuth()">تنفيذ</button>
+            <p id="authSwitchText" style="margin-top: 15px; text-align: center; cursor: pointer; color: var(--gray);" onclick="toggleAuthMode()">ليس لديك حساب؟ إنشاء حساب جديد</p>
+        </div>
+
+        <!-- صندوق إرسال اقتراح للمستخدمين العاديين -->
+        <div id="suggestionBoxContainer" class="auth-box hidden">
+            <h2 style="margin-bottom: 15px;">أرسل اقتراحك للمشرف</h2>
+            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">شاركنا برأيك أو اقتراحك لأفلام/مسلسلات حابب نضيفها للموقع:</p>
+            <textarea id="userSuggestionInput" placeholder="اكتب اقتراحك هنا..." style="height: 100px;"></textarea>
+            <button class="action-btn" onclick="submitSuggestion()">إرسال الاقتراح</button>
+            <button class="action-btn" style="background: #444; margin-top: 8px;" onclick="document.getElementById('suggestionBoxContainer').classList.add('hidden')">إلغاء</button>
+        </div>
+
+        <!-- نافذة لوحة تحكم المشرف المنبثقة فوق الواجهة الأساسية -->
+        <div id="adminOverlay" class="admin-overlay hidden">
+            <div class="admin-modal">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>لوحة تحكم المشرف</h2>
+                    <button onclick="closeAdminPanel()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
+                </div>
+
+                <!-- القائمة الرئيسية للأزرار (مرصوصة تحت بعضها وليست بجانب بعضها) -->
+                <div id="adminMenuButtons" class="admin-menu-buttons">
+                    <button class="admin-menu-btn" onclick="openAdminSection('theme')">
+                        <span>تغيير ألوان وخلفية الموقع</span>
+                        <span>🎨</span>
+                    </button>
+                    <button class="admin-menu-btn" onclick="openAdminSection('sitename')">
+                        <span>تغيير اسم الموقع</span>
+                        <span>✏️</span>
+                    </button>
+                    <button class="admin-menu-btn" onclick="openAdminSection('suggestions')">
+                        <span>عرض اقتراحات المستخدمين</span>
+                        <span>📥</span>
+                    </button>
+                    <button class="admin-menu-btn" onclick="openAdminSection('content')">
+                        <span>نشر الصور والفيديوهات</span>
+                        <span>🎬</span>
+                    </button>
+                </div>
+
+                <!-- 1. قسم تغيير الألوان والخلفية -->
+                <div id="subSectionTheme" class="admin-sub-section hidden">
+                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+                    <h3>تغيير ألوان وخلفية الموقع</h3>
+                    <label style="font-size: 14px; color: var(--gray);">اللون الأساسي:</label>
+                    <input type="color" id="primaryColorPicker" value="#e50914" style="height: 40px; cursor: pointer;">
+                    
+                    <label style="font-size: 14px; color: var(--gray); margin-top: 10px; display: block;">لون الخلفية:</label>
+                    <input type="color" id="bgColorPicker" value="#141414" style="height: 40px; cursor: pointer;">
+                    <button class="action-btn" onclick="updateSiteTheme()">حفظ وتطبيق الألوان والخلفية</button>
+                </div>
+
+                <!-- 2. قسم تغيير اسم الموقع -->
+                <div id="subSectionSiteName" class="admin-sub-section hidden">
+                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+                    <h3>تغيير اسم الموقع</h3>
+                    <input type="text" id="newSiteNameInput" placeholder="اكتب اسم الموقع الجديد هنا">
+                    <button class="action-btn" onclick="updateSiteName()">تحديث اسم الموقع</button>
+                </div>
+
+                <!-- 3. قسم عرض الاقتراحات -->
+                <div id="subSectionSuggestions" class="admin-sub-section hidden">
+                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+                    <h3>اقتراحات المستخدمين المستلمة</h3>
+                    <div id="adminSuggestionsList" style="max-height: 250px; overflow-y: auto; margin-top: 10px;">
+                        <p style="color: var(--gray);">لا توجد اقتراحات جديدة حالياً.</p>
+                    </div>
+                </div>
+
+                <!-- 4. قسم نشر الصور والفيديوهات -->
+                <div id="subSectionContent" class="admin-sub-section hidden">
+                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+                    <h3>نشر الصور والفيديوهات</h3>
+                    <select id="contentSectionSelect"></select>
+                    <input type="text" id="contentTitle" placeholder="عنوان المحتوى">
+                    <textarea id="contentDesc" placeholder="وصف المحتوى"></textarea>
+                    
+                    <label style="margin-top:10px; display:block; color:var(--gray); font-size:14px;">صورة الغلاف:</label>
+                    <div class="upload-box" onclick="document.getElementById('contentImage').click()">
+                        <span style="font-size: 24px;">📷</span>
+                        <p id="imgFileName">اضغط لاختيار صورة الغلاف من المعرض</p>
+                    </div>
+                    <input type="file" id="contentImage" accept="image/*" class="hidden" onchange="updateFileName('contentImage', 'imgFileName')">
+                    
+                    <label style="margin-top:10px; display:block; color:var(--gray); font-size:14px;">ملف الفيديو:</label>
+                    <div class="upload-box" onclick="document.getElementById('contentVideo').click()">
+                        <span style="font-size: 24px;">🎥</span>
+                        <p id="vidFileName">اضغط لاختيار ملف الفيديو من المعرض</p>
+                    </div>
+                    <input type="file" id="contentVideo" accept="video/*" class="hidden" onchange="updateFileName('contentVideo', 'vidFileName')">
+                    
+                    <button class="action-btn" onclick="publishContent()">نشر المحتوى</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="mainContentArea"></div>
+
+    </div>
+
+    <script>
+        (function() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    alert('هذا الإجراء غير مسموح به لأسباب أمنية!');
+                }
+            });
+        })();
+
+        let currentUser = JSON.parse(localStorage.getItem('esultan_current_user')) || null;
+        let isLoginMode = true;
+        let activeSectionId = null;
+        const unlockedSections = new Set();
+
+        if (!localStorage.getItem('esultan_sections')) {
+            const defaultSections = [
+                { id: 'sec_1', name: 'أحدث الأفلام', locked: false, password: '' },
+                { id: 'sec_2', name: 'المسلسلات', locked: false, password: '' },
+                { id: 'sec_3', name: 'الأنمي', locked: false, password: '' },
+                { id: 'sec_4', name: 'كرتون', locked: false, password: '' }
+            ];
+            localStorage.setItem('esultan_sections', JSON.stringify(defaultSections));
+        }
+
+        if (!localStorage.getItem('esultan_contents')) {
+            localStorage.setItem('esultan_contents', JSON.stringify([]));
+        }
+
+        if (!localStorage.getItem('esultan_suggestions')) {
+            localStorage.setItem('esultan_suggestions', JSON.stringify([]));
+        }
+
+        window.onload = function() {
+            checkAuthUI();
+            applySavedStyles();
+            loadSiteName();
+            initActiveSection();
+            renderCategoriesBar();
+            renderAppContent();
+        };
+
+        function initActiveSection() {
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            if(sections.length > 0) {
+                if(!activeSectionId || !sections.some(s => s.id === activeSectionId)) {
+                    activeSectionId = sections[0].id;
+                }
+            }
+        }
+
+        function renderCategoriesBar() {
+            const bar = document.getElementById('categoriesBar');
+            bar.innerHTML = '';
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+
+            sections.forEach(sec => {
+                const tab = document.createElement('div');
+                tab.className = `category-tab ${sec.id === activeSectionId ? 'active' : ''}`;
+                tab.innerHTML = `${sec.name} ${sec.locked && !unlockedSections.has(sec.id) ? '🔒' : ''}`;
+                tab.onclick = function() {
+                    activeSectionId = sec.id;
+                    renderCategoriesBar();
+                    renderAppContent();
+                };
+                bar.appendChild(tab);
+            });
+        }
+
+        function showAuth(mode) {
+            document.getElementById('suggestionBoxContainer').classList.add('hidden');
+            document.getElementById('authContainer').classList.remove('hidden');
+            if(mode === 'login') {
+                isLoginMode = true;
+                document.getElementById('authTitle').innerText = 'تسجيل الدخول';
+                document.getElementById('authSwitchText').innerText = 'ليس لديك حساب؟ إنشاء حساب جديد';
+            } else {
+                isLoginMode = false;
+                document.getElementById('authTitle').innerText = 'إنشاء حساب جديد';
+                document.getElementById('authSwitchText').innerText = 'لديك حساب بالفعل؟ تسجيل الدخول';
+            }
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            showAuth(isLoginMode ? 'login' : 'register');
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+
+            if (!email || !password) {
+                alert('الرجاء إدخال البريد الإلكتروني وكلمة المرور!');
+                return;
+            }
+
+            if (email === 'gojoesultan@gmail.com' && password === 'ahmedgojo123456789') {
+                currentUser = { email: email, role: 'admin' };
+                localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+                alert('مرحباً بك أيها المشرف (Gojo Esultan)');
+                document.getElementById('authContainer').classList.add('hidden');
+                checkAuthUI();
+                renderAppContent();
+                return;
+            }
+
+            if (isLoginMode) {
+                let users = JSON.parse(localStorage.getItem('esultan_users')) || [];
+                let found = users.find(u => u.email === email && u.password === password);
+                if (found) {
+                    currentUser = { email: email, role: 'user' };
+                    localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+                    alert('تم تسجيل الدخول بنجاح');
+                    document.getElementById('authContainer').classList.add('hidden');
+                    checkAuthUI();
+                } else {
+                    alert('بيانات الدخول غير صحيحة أو الحساب غير موجود!');
+                }
+            } else {
+                let users = JSON.parse(localStorage.getItem('esultan_users')) || [];
+                if (users.some(u => u.email === email)) {
+                    alert('هذا البريد مستخدم مسبقاً!');
+                    return;
+                }
+                users.push({ email, password });
+                localStorage.setItem('esultan_users', JSON.stringify(users));
+                alert('تم إنشاء الحساب بنجاح.');
+                toggleAuthMode();
+            }
+        }
+
+        function confirmLogout() {
+            if (confirm('هل أنت متأكد من رغبتك في تسجيل الخروج من المنصة؟')) {
+                currentUser = null;
+                localStorage.removeItem('esultan_current_user');
+                closeAdminPanel();
+                document.getElementById('suggestionBoxContainer').classList.add('hidden');
+                checkAuthUI();
+                renderAppContent();
+            }
+        }
+
+        function checkAuthUI() {
+            const loginBtn = document.getElementById('loginNavBtn');
+            const regBtn = document.getElementById('registerNavBtn');
+            const adminBtn = document.getElementById('adminNavBtn');
+            const suggestionUserBtn = document.getElementById('suggestionUserBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const welcome = document.getElementById('userWelcome');
+
+            if (currentUser) {
+                loginBtn.classList.add('hidden');
+                regBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                welcome.innerText = `مرحباً: ${currentUser.email}`;
+
+                if (currentUser.role === 'admin') {
+                    adminBtn.classList.remove('hidden');
+                    suggestionUserBtn.classList.add('hidden');
+                } else {
+                    adminBtn.classList.add('hidden');
+                    suggestionUserBtn.classList.remove('hidden');
+                    closeAdminPanel();
+                }
+            } else {
+                loginBtn.classList.remove('hidden');
+                regBtn.classList.remove('hidden');
+                adminBtn.classList.add('hidden');
+                suggestionUserBtn.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+                welcome.innerText = '';
+                closeAdminPanel();
+                document.getElementById('suggestionBoxContainer').classList.add('hidden');
+            }
+        }
+
+        // التحكم في فتح وإغلاق لوحة المشرف المنبثقة
+        function openAdminPanel() {
+            document.getElementById('adminOverlay').classList.remove('hidden');
+            backToAdminMenu();
+            populateSectionSelect();
+            renderAdminSuggestions();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminOverlay').classList.add('hidden');
+        }
+
+        // التنقل داخل نافذة المشرف (عرض قسم واحد بناءً على الزرار المضغوط)
+        function openAdminSection(sectionName) {
+            document.getElementById('adminMenuButtons').classList.add('hidden');
+            document.getElementById('subSectionTheme').classList.add('hidden');
+            document.getElementById('subSectionSiteName').classList.add('hidden');
+            document.getElementById('subSectionSuggestions').classList.add('hidden');
+            document.getElementById('subSectionContent').classList.add('hidden');
+
+            if(sectionName === 'theme') {
+                document.getElementById('subSectionTheme').classList.remove('hidden');
+            } else if(sectionName === 'sitename') {
+                document.getElementById('subSectionSiteName').classList.remove('hidden');
+            } else if(sectionName === 'suggestions') {
+                document.getElementById('subSectionSuggestions').classList.remove('hidden');
+            } else if(sectionName === 'content') {
+                document.getElementById('subSectionContent').classList.remove('hidden');
+            }
+        }
+
+        function backToAdminMenu() {
+            document.getElementById('adminMenuButtons').classList.remove('hidden');
+            document.getElementById('subSectionTheme').classList.add('hidden');
+            document.getElementById('subSectionSiteName').classList.add('hidden');
+            document.getElementById('subSectionSuggestions').classList.add('hidden');
+            document.getElementById('subSectionContent').classList.add('hidden');
+        }
+
+        function showSuggestionModal() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('suggestionBoxContainer').classList.toggle('hidden');
+        }
+
+        function submitSuggestion() {
+            const text = document.getElementById('userSuggestionInput').value.trim();
+            if (!text) {
+                alert('الرجاء كتابة اقتراحك أولاً!');
+                return;
+            }
+
+            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+            suggestions.push({
+                id: Date.now(),
+                user: currentUser.email,
+                text: text,
+                date: new Date().toLocaleDateString('ar-EG')
+            });
+
+            localStorage.setItem('esultan_suggestions', JSON.stringify(suggestions));
+            alert('تم إرسال اقتراحك للمشرف بنجاح، شكراً لك!');
+            document.getElementById('userSuggestionInput').value = '';
+            document.getElementById('suggestionBoxContainer').classList.add('hidden');
+        }
+
+        function renderAdminSuggestions() {
+            const listContainer = document.getElementById('adminSuggestionsList');
+            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+
+            if (suggestions.length === 0) {
+                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد اقتراحات جديدة حالياً.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            suggestions.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerHTML = `
+                    <div style="font-size: 13px; color: var(--primary); margin-bottom: 4px;">من: ${item.user} (${item.date})</div>
+                    <div style="font-size: 14px; margin-bottom: 8px;">${item.text}</div>
+                    <button onclick="deleteSuggestion(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف الاقتراح</button>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function deleteSuggestion(id) {
+            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+            suggestions = suggestions.filter(s => s.id !== id);
+            localStorage.setItem('esultan_suggestions', JSON.stringify(suggestions));
+            renderAdminSuggestions();
+        }
+
+        function updateFileName(inputId, textId) {
+            const input = document.getElementById(inputId);
+            const textEl = document.getElementById(textId);
+            if (input.files && input.files[0]) {
+                textEl.innerText = "تم اختيار: " + input.files[0].name;
+                textEl.style.color = "#4CAF50";
+            }
+        }
+
+        function updateSiteTheme() {
+            const primary = document.getElementById('primaryColorPicker').value;
+            const bg = document.getElementById('bgColorPicker').value;
+            
+            localStorage.setItem('esultan_primary', primary);
+            localStorage.setItem('esultan_bg', bg);
+            applySavedStyles();
+            alert('تم حفظ وتطبيق الألوان والخلفية بنجاح!');
+        }
+
+        function applySavedStyles() {
+            const primary = localStorage.getItem('esultan_primary');
+            const bg = localStorage.getItem('esultan_bg');
+            if (primary) {
+                document.documentElement.style.setProperty('--primary', primary);
+                document.getElementById('primaryColorPicker').value = primary;
+            }
+            if (bg) {
+                document.documentElement.style.setProperty('--bg', bg);
+                document.getElementById('bgColorPicker').value = bg;
+            }
+        }
+
+        function updateSiteName() {
+            const newName = document.getElementById('newSiteNameInput').value.trim();
+            if (!newName) {
+                alert('الرجاء كتابة اسم الموقع الجديد!');
+                return;
+            }
+            localStorage.setItem('esultan_site_name', newName);
+            loadSiteName();
+            document.getElementById('newSiteNameInput').value = '';
+            alert('تم تحديث اسم الموقع بنجاح!');
+        }
+
+        function loadSiteName() {
+            const savedName = localStorage.getItem('esultan_site_name');
+            if (savedName) {
+                document.getElementById('siteLogoText').innerText = savedName;
+                document.getElementById('pageTitle').innerText = savedName;
+            }
+        }
+
+        function populateSectionSelect() {
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            let select = document.getElementById('contentSectionSelect');
+            select.innerHTML = '';
+            sections.forEach(sec => {
+                let opt = document.createElement('option');
+                opt.value = sec.id;
+                opt.innerText = sec.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function publishContent() {
+            const sectionId = document.getElementById('contentSectionSelect').value;
+            const title = document.getElementById('contentTitle').value.trim();
+            const desc = document.getElementById('contentDesc').value.trim();
+            const imgFile = document.getElementById('contentImage').files[0];
+            const vidFile = document.getElementById('contentVideo').files[0];
+
+            if (!sectionId || !title || !imgFile || !vidFile) {
+                alert('الرجاء التأكد من اختيار القسم، تعبئة العنوان، واختيار صورة الغلاف وفيديو من المعرض!');
+                return;
+            }
+
+            const readerImg = new FileReader();
+            readerImg.onload = function(eImg) {
+                const imgData = eImg.target.result;
+
+                const readerVid = new FileReader();
+                readerVid.onload = function(eVid) {
+                    const vidData = eVid.target.result;
+
+                    let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+                    contents.push({
+                        id: Date.now(),
+                        sectionId: sectionId,
+                        title: title,
+                        desc: desc,
+                        image: imgData,
+                        video: vidData
+                    });
+
+                    localStorage.setItem('esultan_contents', JSON.stringify(contents));
+                    alert('تم نشر المحتوى بنجاح!');
+                    
+                    document.getElementById('contentTitle').value = '';
+                    document.getElementById('contentDesc').value = '';
+                    document.getElementById('contentImage').value = '';
+                    document.getElementById('contentVideo').value = '';
+                    document.getElementById('imgFileName').innerText = 'اضغط لاختيار صورة الغلاف من المعرض';
+                    document.getElementById('imgFileName').style.color = 'var(--gray)';
+                    document.getElementById('vidFileName').innerText = 'اضغط لاختيار ملف الفيديو من المعرض';
+                    document.getElementById('vidFileName').style.color = 'var(--gray)';
+                    
+                    activeSectionId = sectionId;
+                    renderCategoriesBar();
+                    renderAppContent();
+                };
+                readerVid.readAsDataURL(vidFile);
+            };
+            readerImg.readAsDataURL(imgFile);
+        }
+
+        function deleteContent(contentId) {
+            if(confirm('هل تريد حذف هذا المحتوى؟')) {
+                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+                contents = contents.filter(c => c.id !== contentId);
+                localStorage.setItem('esultan_contents', JSON.stringify(contents));
+                renderAppContent();
+            }
+        }
+
+        function renderAppContent() {
+            const area = document.getElementById('mainContentArea');
+            area.innerHTML = '';
+
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+
+            if(sections.length === 0 || !activeSectionId) {
+                area.innerHTML = '<p style="text-align:center; color:var(--gray); padding:30px;">لا توجد أقسام حالياً.</p>';
+                return;
+            }
+
+            const currentSec = sections.find(s => s.id === activeSectionId);
+            if(!currentSec) return;
+
+            const secDiv = document.createElement('div');
+            secDiv.className = 'auth-box';
+
+            let headerHTML = `<div class="section-header">
+                <h2>${currentSec.name} ${currentSec.locked && !unlockedSections.has(currentSec.id) ? '<span class="locked-badge">مغلق بكلمة مرور</span>' : ''}</h2>
+            </div>`;
+            secDiv.innerHTML = headerHTML;
+
+            if (currentSec.locked && !unlockedSections.has(currentSec.id)) {
+                secDiv.innerHTML += `
+                    <div style="text-align: center; padding: 30px;">
+                        <p style="margin-bottom: 15px; color: var(--gray);">هذا القسم محمي بكلمة مرور خاصة. يرجى إدخال كلمة المرور للمتابعة:</p>
+                        <input type="password" id="pass_${currentSec.id}" placeholder="أدخل كلمة المرور الخاصة بالقسم" style="max-width: 300px; display: inline-block; margin-left: 10px;">
+                        <button class="action-btn" style="max-width: 150px; display: inline-block;" onclick="verifySectionPassword('${currentSec.id}')">فتح القسم</button>
+                    </div>
+                `;
+            } else {
+                const secContents = contents.filter(c => c.sectionId === currentSec.id);
+                if(secContents.length === 0) {
+                    secDiv.innerHTML += `<p style="color:var(--gray); margin-top: 15px;">لا يوجد محتوى منشور في هذا القسم حتى الآن.</p>`;
+                } else {
+                    const gridDiv = document.createElement('div');
+                    gridDiv.className = 'grid';
+
+                    secContents.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className, 'card';
+                        card.innerHTML = `
+                            <img src="${item.image}" alt="${item.title}">
+                            <video controls src="${item.video}"></video>
+                            <div class="card-body">
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-desc">${item.desc}</div>
+                                ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteContent(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; margin-top:10px; width:100%;">حذف المحتوى</button>` : ''}
+                            </div>
+                        `;
+                        gridDiv.appendChild(card);
+                    });
+                    secDiv.appendChild(gridDiv);
+                }
+            }
+
+            area.appendChild(secDiv);
+        }
+
+        function verifySectionPassword(secId) {
+            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+            const sec = sections.find(s => s.id === secId);
+            const inputPass = document.getElementById(`pass_${secId}`).value.trim();
+
+            if (sec && inputPass === sec.password) {
+                unlockedSections.add(secId);
+                alert('تم فتح القسم بنجاح!');
+                renderCategoriesBar();
+                renderAppContent();
+            } else {
+                alert('كلمة مرور القسم غير صحيحة!');
+            }
+        }
+    </script>
+</body>
+</html>
