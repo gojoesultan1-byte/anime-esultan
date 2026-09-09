@@ -1,1355 +1,1936 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">esultan anime</title>
-    <style>
-        :root {
-            --primary: #e50914;
-            --bg: #141414;
-            --card-bg: #1f1f1f;
-            --text: #ffffff;
-            --gray: #808080;
+‏<!DOCTYPE html>
+‏<html lang="ar" dir="rtl">
+‏<head>
+‏    <meta charset="UTF-8">
+‏    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‏    <title id="pageTitle">esultan anime</title>
+‏    <style>
+‏        :root {
+‏            --primary: #e50914;
+‏            --bg: #141414;
+‏            --card-bg: #1f1f1f;
+‏            --text: #ffffff;
+‏            --gray: #808080;
         }
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+‏            box-sizing: border-box;
+‏            margin: 0;
+‏            padding: 0;
+‏            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
+‏        body {
+‏            background-color: var(--bg);
+‏            color: var(--text);
+‏            min-height: 100vh;
         }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: rgba(0,0,0,0.9);
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+‏        header {
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            padding: 15px 30px;
+‏            background: rgba(0,0,0,0.9);
+‏            border-bottom: 1px solid #333;
+‏            position: sticky;
+‏            top: 0;
+‏            z-index: 1000;
         }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-            text-transform: uppercase;
+‏        .logo {
+‏            font-size: 24px;
+‏            font-weight: bold;
+‏            color: var(--primary);
+‏            text-transform: uppercase;
         }
-        .nav-btns button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: 10px;
+‏        .header-controls {
+‏            display: flex;
+‏            align-items: center;
+‏            gap: 12px;
+        }
+‏        .nav-btns button, .profile-trigger-btn {
+‏            background: var(--primary);
+‏            color: white;
+‏            border: none;
+‏            padding: 8px 16px;
+‏            border-radius: 4px;
+‏            cursor: pointer;
+‏            font-weight: bold;
+        }
+‏        .profile-trigger-btn {
+‏            background: #2b2b2b;
+‏            border: 1px solid #444;
+‏            display: flex;
+‏            align-items: center;
+‏            gap: 8px;
+        }
+‏        .profile-avatar-small {
+‏            width: 28px;
+‏            height: 28px;
+‏            border-radius: 50%;
+‏            object-fit: cover;
+‏            background: #555;
         }
 
         /* شريط الأقسام الرئيسي الأفقي */
-        .categories-bar {
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 0 20px;
-            scroll-behavior: smooth;
+‏        .categories-bar {
+‏            background: #1a1a1a;
+‏            border-bottom: 1px solid #333;
+‏            display: flex;
+‏            overflow-x: auto;
+‏            white-space: nowrap;
+‏            padding: 0 20px;
+‏            scroll-behavior: smooth;
         }
-        .categories-bar::-webkit-scrollbar {
-            height: 4px;
+‏        .categories-bar::-webkit-scrollbar {
+‏            height: 4px;
         }
-        .categories-bar::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
+‏        .categories-bar::-webkit-scrollbar-thumb {
+‏            background: var(--primary);
+‏            border-radius: 2px;
         }
-        .category-tab {
-            padding: 15px 20px;
-            color: var(--gray);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 15px;
-            border-bottom: 3px solid transparent;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+‏        .category-tab {
+‏            padding: 15px 20px;
+‏            color: var(--gray);
+‏            cursor: pointer;
+‏            font-weight: 600;
+‏            font-size: 15px;
+‏            border-bottom: 3px solid transparent;
+‏            transition: 0.3s;
+‏            display: inline-flex;
+‏            align-items: center;
+‏            gap: 8px;
         }
-        .category-tab:hover {
-            color: var(--text);
+‏        .category-tab:hover {
+‏            color: var(--text);
         }
-        .category-tab.active {
-            color: var(--text);
-            border-bottom-color: var(--primary);
-            background: rgba(229, 9, 20, 0.05);
-        }
-
-        /* شريط التصنيفات الفرعية الأفقي (للمسلسلات والأنمي) */
-        .sub-categories-bar {
-            background: #181818;
-            border-bottom: 1px solid #282828;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 0 20px;
-            margin-bottom: 20px;
-            scroll-behavior: smooth;
-        }
-        .sub-categories-bar::-webkit-scrollbar {
-            height: 3px;
-        }
-        .sub-categories-bar::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
-        }
-        .sub-category-tab {
-            padding: 10px 18px;
-            color: var(--gray);
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            border-bottom: 2px solid transparent;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .sub-category-tab:hover {
-            color: var(--text);
-        }
-        .sub-category-tab.active {
-            color: var(--text);
-            border-bottom-color: var(--primary);
-            background: rgba(229, 9, 20, 0.08);
+‏        .category-tab.active {
+‏            color: var(--text);
+‏            border-bottom-color: var(--primary);
+‏            background: rgba(229, 9, 20, 0.05);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 20px;
+        /* شريط التصنيفات الفرعية الأفقي */
+‏        .sub-categories-bar {
+‏            background: #181818;
+‏            border-bottom: 1px solid #282828;
+‏            display: flex;
+‏            overflow-x: auto;
+‏            white-space: nowrap;
+‏            padding: 0 20px;
+‏            margin-bottom: 20px;
+‏            scroll-behavior: smooth;
         }
-        .auth-box {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+‏        .sub-categories-bar::-webkit-scrollbar {
+‏            height: 3px;
         }
-
-        /* نافذة لوحة المشرف المنبثقة */
-        .admin-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-y: auto;
+‏        .sub-categories-bar::-webkit-scrollbar-thumb {
+‏            background: var(--primary);
+‏            border-radius: 2px;
         }
-        .admin-modal {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 650px;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border: 1px solid #333;
-            max-height: 90vh;
-            overflow-y: auto;
+‏        .sub-category-tab {
+‏            padding: 10px 18px;
+‏            color: var(--gray);
+‏            cursor: pointer;
+‏            font-weight: 500;
+‏            font-size: 14px;
+‏            border-bottom: 2px solid transparent;
+‏            transition: 0.3s;
+‏            display: inline-flex;
+‏            align-items: center;
+‏            gap: 6px;
         }
-        .admin-modal::-webkit-scrollbar {
-            width: 6px;
+‏        .sub-category-tab:hover {
+‏            color: var(--text);
         }
-        .admin-modal::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 3px;
+‏        .sub-category-tab.active {
+‏            color: var(--text);
+‏            border-bottom-color: var(--primary);
+‏            background: rgba(229, 9, 20, 0.08);
         }
 
-        .admin-menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+‏        .container {
+‏            max-width: 1200px;
+‏            margin: 25px auto;
+‏            padding: 0 20px;
         }
-        .admin-menu-btn {
-            background: #252525;
-            color: white;
-            border: 1px solid #444;
-            padding: 16px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: right;
-            transition: 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .admin-menu-btn:hover {
-            border-color: var(--primary);
-            background: #2b2b2b;
+‏        .auth-box {
+‏            background: var(--card-bg);
+‏            padding: 30px;
+‏            border-radius: 8px;
+‏            margin-bottom: 30px;
+‏            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .admin-sub-section {
-            background: #252525;
-            padding: 20px;
-            border-radius: 6px;
-            margin-top: 15px;
-            border: 1px solid #333;
+        /* النوافذ المنبثقة العامة */
+‏        .modal-overlay {
+‏            position: fixed;
+‏            top: 0;
+‏            left: 0;
+‏            width: 100%;
+‏            height: 100%;
+‏            background: rgba(0,0,0,0.85);
+‏            z-index: 2000;
+‏            display: flex;
+‏            justify-content: center;
+‏            align-items: center;
+‏            padding: 20px;
+‏            overflow-y: auto;
         }
-        .back-to-admin-menu {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 15px;
-            font-weight: bold;
+‏        .modal-content {
+‏            background: var(--card-bg);
+‏            width: 100%;
+‏            max-width: 700px;
+‏            border-radius: 10px;
+‏            padding: 30px;
+‏            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+‏            border: 1px solid #333;
+‏            max-height: 90vh;
+‏            overflow-y: auto;
         }
-        .back-to-admin-menu:hover {
-            background: #444;
+‏        .modal-content::-webkit-scrollbar {
+‏            width: 6px;
+        }
+‏        .modal-content::-webkit-scrollbar-thumb {
+‏            background: var(--primary);
+‏            border-radius: 3px;
         }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #2b2b2b;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 4px;
+‏        .admin-menu-buttons {
+‏            display: flex;
+‏            flex-direction: column;
+‏            gap: 15px;
+        }
+‏        .admin-menu-btn {
+‏            background: #252525;
+‏            color: white;
+‏            border: 1px solid #444;
+‏            padding: 16px 20px;
+‏            border-radius: 6px;
+‏            font-size: 16px;
+‏            font-weight: bold;
+‏            cursor: pointer;
+‏            text-align: right;
+‏            transition: 0.3s;
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+        }
+‏        .admin-menu-btn:hover {
+‏            border-color: var(--primary);
+‏            background: #2b2b2b;
+        }
+
+‏        .admin-sub-section {
+‏            background: #252525;
+‏            padding: 20px;
+‏            border-radius: 6px;
+‏            margin-top: 15px;
+‏            border: 1px solid #333;
+        }
+‏        .back-to-menu {
+‏            background: #333;
+‏            color: white;
+‏            border: none;
+‏            padding: 8px 15px;
+‏            border-radius: 4px;
+‏            cursor: pointer;
+‏            font-size: 14px;
+‏            margin-bottom: 15px;
+‏            font-weight: bold;
+        }
+‏        .back-to-menu:hover {
+‏            background: #444;
+        }
+
+‏        input, textarea, select {
+‏            width: 100%;
+‏            padding: 12px;
+‏            margin: 10px 0;
+‏            background: #2b2b2b;
+‏            border: 1px solid #444;
+‏            color: white;
+‏            border-radius: 4px;
+        }
+
+‏        button.action-btn {
+‏            background: var(--primary);
+‏            color: white;
+‏            border: none;
+‏            padding: 12px 20px;
+‏            border-radius: 4px;
+‏            cursor: pointer;
+‏            font-size: 16px;
+‏            width: 100%;
+‏            font-weight: bold;
+‏            margin-top: 10px;
+        }
+‏        button.action-btn:hover {
+‏            opacity: 0.9;
+        }
+‏        .hidden {
+‏            display: none !important;
+        }
+‏        .grid {
+‏            display: grid;
+‏            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+‏            gap: 20px;
+‏            margin-top: 20px;
+        }
+‏        .card {
+‏            background: #222;
+‏            border-radius: 6px;
+‏            overflow: hidden;
+‏            border: 1px solid #333;
+‏            display: flex;
+‏            flex-direction: column;
+‏            cursor: pointer;
+‏            transition: 0.2s;
+        }
+‏        .card:hover {
+‏            transform: translateY(-3px);
+‏            border-color: var(--primary);
+        }
+‏        .thumbnail-container {
+‏            position: relative;
+‏            width: 100%;
+‏            height: 160px;
+‏            background: #000;
+        }
+‏        .thumbnail-container img, .thumbnail-container video {
+‏            width: 100%;
+‏            height: 100%;
+‏            object-fit: cover;
+        }
+‏        .card-body {
+‏            padding: 15px;
+‏            display: flex;
+‏            flex-direction: column;
+‏            flex-grow: 1;
+        }
+‏        .card-title {
+‏            font-size: 16px;
+‏            font-weight: bold;
+‏            margin-bottom: 5px;
+        }
+‏        .card-desc {
+‏            color: var(--gray);
+‏            font-size: 13px;
+‏            margin-bottom: 10px;
+‏            flex-grow: 1;
+        }
+‏        .video-stats {
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            font-size: 13px;
+‏            color: var(--gray);
+‏            border-top: 1px solid #333;
+‏            padding-top: 10px;
+‏            margin-top: auto;
         }
         
-        .upload-box {
-            border: 2px dashed #444;
-            padding: 20px;
-            text-align: center;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 10px 0;
-            background: #222;
-            transition: 0.3s;
+        /* أزرار التفاعل (اللايك والتنزيل) */
+‏        .card-actions-row {
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            margin-top: 10px;
+‏            border-top: 1px solid #333;
+‏            padding-top: 10px;
         }
-        .upload-box:hover {
-            border-color: var(--primary);
-            background: #282828;
+‏        .like-btn {
+‏            background: none;
+‏            border: none;
+‏            cursor: pointer;
+‏            padding: 0;
+‏            display: flex;
+‏            align-items: center;
+‏            gap: 5px;
+‏            color: var(--gray);
+‏            font-size: 13px;
         }
-        .upload-box p {
-            color: var(--gray);
-            font-size: 14px;
-            margin-top: 5px;
+‏        .like-btn svg {
+‏            width: 20px;
+‏            height: 20px;
+‏            fill: #ffffff;
+‏            stroke: #ffffff;
+‏            stroke-width: 1.5;
+‏            transition: fill 0.3s ease;
+        }
+‏        .like-btn.liked svg {
+‏            fill: #ff3b30;
+‏            stroke: #ff3b30;
+        }
+‏        .like-btn.liked span {
+‏            color: #ff3b30;
         }
 
-        button.action-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            font-weight: bold;
-            margin-top: 10px;
+‏        .download-btn-card {
+‏            background: #2b2b2b;
+‏            color: white;
+‏            border: 1px solid #444;
+‏            padding: 4px 10px;
+‏            border-radius: 4px;
+‏            font-size: 12px;
+‏            cursor: pointer;
+‏            display: flex;
+‏            align-items: center;
+‏            gap: 5px;
         }
-        button.action-btn:hover {
-            opacity: 0.9;
+‏        .download-btn-card:hover {
+‏            border-color: var(--primary);
         }
-        .hidden {
-            display: none !important;
+
+‏        .section-header {
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            margin-bottom: 15px;
+‏            flex-wrap: wrap;
+‏            gap: 10px;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+‏        .locked-badge {
+‏            background: #d9534f;
+‏            color: white;
+‏            padding: 2px 8px;
+‏            border-radius: 4px;
+‏            font-size: 12px;
         }
-        .card {
-            background: #222;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #333;
+‏        .suggestion-item, .section-manage-item {
+‏            background: #1e1e1e;
+‏            padding: 12px;
+‏            border-radius: 4px;
+‏            margin-bottom: 10px;
+‏            border: 1px solid #333;
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
         }
-        .card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+‏        .search-bar-container {
+‏            margin-bottom: 20px;
         }
-        .card video {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+
+        /* نافذة عرض المحتوى (فيديو أو صورة أو مقال) المنبثقة */
+‏        .video-modal-overlay {
+‏            position: fixed;
+‏            top: 0;
+‏            left: 0;
+‏            width: 100%;
+‏            height: 100%;
+‏            background: rgba(0,0,0,0.9);
+‏            z-index: 3000;
+‏            display: flex;
+‏            justify-content: center;
+‏            align-items: center;
+‏            padding: 20px;
         }
-        .card-body {
-            padding: 15px;
+‏        .video-modal-content {
+‏            background: #1e1e1e;
+‏            width: 100%;
+‏            max-width: 900px;
+‏            border-radius: 8px;
+‏            overflow: hidden;
+‏            border: 1px solid #333;
+‏            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
         }
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
+‏        .video-responsive-wrapper {
+‏            position: relative;
+‏            width: 100%;
+‏            padding-bottom: 56.25%;
+‏            background: #000;
         }
-        .card-desc {
-            color: var(--gray);
-            font-size: 14px;
+‏        .video-responsive-wrapper iframe, .video-responsive-wrapper video {
+‏            position: absolute;
+‏            top: 0;
+‏            left: 0;
+‏            width: 100%;
+‏            height: 100%;
+‏            border: none;
         }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
+‏        .upload-box {
+‏            background: #2b2b2b;
+‏            border: 2px dashed #444;
+‏            padding: 15px;
+‏            text-align: center;
+‏            border-radius: 4px;
+‏            margin: 10px 0;
+‏            cursor: pointer;
         }
-        .locked-badge {
-            background: #d9534f;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+‏        .upload-box:hover {
+‏            border-color: var(--primary);
         }
-        .suggestion-item, .section-manage-item {
-            background: #1e1e1e;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            border: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+‏        .account-switcher-item {
+‏            background: #222;
+‏            padding: 10px 15px;
+‏            border-radius: 6px;
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            margin-bottom: 8px;
+‏            border: 1px solid #333;
         }
-        .search-bar-container {
-            margin-bottom: 20px;
+‏        .account-switcher-item.active-account {
+‏            border-color: var(--primary);
+‏            background: rgba(229, 9, 20, 0.1);
         }
-    </style>
-</head>
-<body oncontextmenu="return false;">
+        
+‏        .downloaded-item-row {
+‏            background: #222;
+‏            padding: 10px 12px;
+‏            border-radius: 6px;
+‏            display: flex;
+‏            justify-content: space-between;
+‏            align-items: center;
+‏            margin-bottom: 8px;
+‏            border: 1px solid #333;
+        }
+
+        /* تنسيق صفحة التنزيلات الكاملة والتبويبات (فيديوهات / صور) */
+‏        .full-page-overlay {
+‏            position: fixed;
+‏            top: 0;
+‏            left: 0;
+‏            width: 100%;
+‏            height: 100%;
+‏            background-color: #121212;
+‏            z-index: 9999;
+‏            padding: 20px;
+‏            box-sizing: border-box;
+‏            color: #fff;
+‏            overflow-y: auto;
+        }
+‏        .page-header {
+‏            display: flex;
+‏            align-items: center;
+‏            gap: 15px;
+‏            margin-bottom: 20px;
+        }
+‏        .page-header button {
+‏            background: #333;
+‏            color: #fff;
+‏            border: none;
+‏            padding: 8px 15px;
+‏            border-radius: 5px;
+‏            cursor: pointer;
+        }
+‏        .tabs-container {
+‏            display: flex;
+‏            gap: 10px;
+‏            margin-bottom: 20px;
+‏            border-bottom: 1px solid #333;
+‏            padding-bottom: 10px;
+        }
+‏        .tab-btn {
+‏            flex: 1;
+‏            background: #1e1e1e;
+‏            color: #888;
+‏            border: none;
+‏            padding: 12px;
+‏            font-size: 16px;
+‏            border-radius: 8px;
+‏            cursor: pointer;
+‏            transition: 0.3s;
+        }
+‏        .tab-btn.active {
+‏            background: #e50914;
+‏            color: #fff;
+‏            font-weight: bold;
+        }
+
+        /* نافذة تعديل صورة الملف الشخصي (Crop Modal) */
+‏        .crop-modal {
+‏            position: fixed;
+‏            top: 0;
+‏            left: 0;
+‏            width: 100%;
+‏            height: 100%;
+‏            background: rgba(0, 0, 0, 0.85);
+‏            z-index: 10000;
+‏            display: flex;
+‏            justify-content: center;
+‏            align-items: center;
+        }
+‏        .crop-container {
+‏            background: #1e1e1e;
+‏            padding: 20px;
+‏            border-radius: 12px;
+‏            width: 90%;
+‏            max-width: 400px;
+‏            text-align: center;
+‏            color: #fff;
+        }
+‏        .image-crop-area {
+‏            position: relative;
+‏            width: 250px;
+‏            height: 250px;
+‏            margin: 20px auto;
+‏            overflow: hidden;
+‏            background: #000;
+‏            border-radius: 50%;
+‏            border: 2px dashed #fff;
+        }
+‏        .image-crop-area img {
+‏            position: absolute;
+‏            cursor: grab;
+‏            transform-origin: center;
+        }
+‏        .crop-controls {
+‏            margin: 15px 0;
+        }
+‏        .crop-controls input[type="range"] {
+‏            width: 100%;
+        }
+‏        .crop-actions {
+‏            display: flex;
+‏            gap: 10px;
+‏            justify-content: flex-end;
+        }
+‏        .crop-actions button {
+‏            padding: 8px 20px;
+‏            border: none;
+‏            border-radius: 5px;
+‏            cursor: pointer;
+        }
+‏        .crop-actions button:first-child {
+‏            background: #444;
+‏            color: #fff;
+        }
+‏        .crop-actions .save-btn {
+‏            background: #28a745;
+‏            color: #fff;
+        }
+‏    </style>
+‏</head>
+‏<body oncontextmenu="return false;">
 
     <!-- الهيدر -->
-    <header>
-        <div class="logo" id="siteLogoText">esultan anime</div>
-        <div class="nav-btns">
-            <span id="userWelcome" style="margin-left: 15px; font-size: 14px;"></span>
-            <button id="loginNavBtn" onclick="showAuth('login')">تسجيل الدخول</button>
-            <button id="registerNavBtn" onclick="showAuth('register')">إنشاء حساب</button>
-            <button id="adminNavBtn" class="hidden" onclick="openAdminPanel()">لوحة المشرف</button>
-            <button id="suggestionUserBtn" class="hidden" onclick="showSuggestionModal()" style="background:#333; border:1px solid #555;">اقتراحك</button>
-            <button id="logoutBtn" class="hidden" onclick="confirmLogout()">خروج</button>
-        </div>
-    </header>
+‏    <header>
+‏        <div class="logo" id="siteLogoText">esultan anime</div>
+‏        <div class="header-controls">
+‏            <div id="authNavButtons">
+‏                <button id="loginNavBtn" onclick="showAuth('login')">تسجيل الدخول</button>
+‏                <button id="registerNavBtn" onclick="showAuth('register')">إنشاء حساب</button>
+‏            </div>
+            <!-- زر الملف الشخصي (يظهر بعد تسجيل الدخول) -->
+‏            <button id="profileTriggerBtn" class="profile-trigger-btn hidden" onclick="openProfileModal()">
+‏                <img id="headerUserAvatar" src="" class="profile-avatar-small" alt="Avatar">
+‏                <span id="headerUserEmailName">حسابي</span>
+‏            </button>
+‏            <button id="adminNavBtn" class="hidden" onclick="openAdminPanel()" style="background:#333; border:1px solid #555;">لوحة المشرف</button>
+‏            <button id="suggestionUserBtn" class="hidden" onclick="showSuggestionModal()" style="background:#333; border:1px solid #555;">اقتراحك</button>
+‏        </div>
+‏    </header>
 
     <!-- شريط الأقسام الرئيسي الأفقي -->
-    <div class="categories-bar" id="categoriesBar"></div>
+‏    <div class="categories-bar" id="categoriesBar"></div>
 
-    <div class="container">
+‏    <div class="container">
 
         <!-- واجهة تسجيل الدخول -->
-        <div id="authContainer" class="auth-box hidden">
-            <h2 id="authTitle" style="margin-bottom: 20px;">تسجيل الدخول</h2>
-            <input type="email" id="authEmail" placeholder="البريد الإلكتروني">
-            <input type="password" id="authPassword" placeholder="كلمة المرور">
-            <button class="action-btn" onclick="handleAuth()">تنفيذ</button>
-            <p id="authSwitchText" style="margin-top: 15px; text-align: center; cursor: pointer; color: var(--gray);" onclick="toggleAuthMode()">ليس لديك حساب؟ إنشاء حساب جديد</p>
-        </div>
+‏        <div id="authContainer" class="auth-box hidden">
+‏            <h2 id="authTitle" style="margin-bottom: 20px;">تسجيل الدخول</h2>
+‏            <input type="email" id="authEmail" placeholder="البريد الإلكتروني">
+‏            <input type="password" id="authPassword" placeholder="كلمة المرور">
+‏            <button class="action-btn" onclick="handleAuth()">تنفيذ</button>
+‏            <p id="authSwitchText" style="margin-top: 15px; text-align: center; cursor: pointer; color: var(--gray);" onclick="toggleAuthMode()">ليس لديك حساب؟ إنشاء حساب جديد</p>
+‏        </div>
 
-        <!-- صندوق إرسال اقتراح للمستخدمين العاديين -->
-        <div id="suggestionBoxContainer" class="auth-box hidden">
-            <h2 style="margin-bottom: 15px;">أرسل اقتراحك للمشرف</h2>
-            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">شاركنا برأيك أو اقتراحك لأفلام/مسلسلات حابب نضيفها للموقع:</p>
-            <textarea id="userSuggestionInput" placeholder="اكتب اقتراحك هنا..." style="height: 100px;"></textarea>
-            <button class="action-btn" onclick="submitSuggestion()">إرسال الاقتراح</button>
-            <button class="action-btn" style="background: #444; margin-top: 8px;" onclick="document.getElementById('suggestionBoxContainer').classList.add('hidden')">إلغاء</button>
-        </div>
+        <!-- صندوق إرسال اقتراح للمستخدمين -->
+‏        <div id="suggestionBoxContainer" class="auth-box hidden">
+‏            <h2 style="margin-bottom: 15px;">أرسل اقتراحك للمشرف</h2>
+‏            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">شاركنا برأيك أو اقتراحك لأفلام/مسلسلات حابب نضيفها للموقع:</p>
+‏            <textarea id="userSuggestionInput" placeholder="اكتب اقتراحك هنا..." style="height: 100px;"></textarea>
+‏            <button class="action-btn" onclick="submitSuggestion()">إرسال الاقتراح</button>
+‏            <button class="action-btn" style="background: #444; margin-top: 8px;" onclick="document.getElementById('suggestionBoxContainer').classList.add('hidden')">إلغاء</button>
+‏        </div>
+
+        <!-- نافذة عرض المحتوى (فيديو أو صورة أو مقال) المنبثقة -->
+‏        <div id="videoModalOverlay" class="video-modal-overlay hidden">
+‏            <div class="video-modal-content">
+‏                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #141414; border-bottom: 1px solid #333;">
+‏                    <h3 id="modalVideoTitle" style="font-size: 16px; font-weight: bold;">عنوان المحتوى</h3>
+‏                    <button onclick="closeVideoPlayer()" style="background: #d9534f; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
+‏                </div>
+‏                <div id="modalBodyContent"></div>
+‏            </div>
+‏        </div>
+
+        <!-- نافذة الملف الشخصي الشاملة -->
+‏        <div id="profileModalOverlay" class="modal-overlay hidden">
+‏            <div class="modal-content">
+‏                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+‏                    <h2 id="profileModalTitle">الملف الشخصي وإعدادات الحساب</h2>
+‏                    <button onclick="closeProfileModal()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
+‏                </div>
+
+‏                <div style="text-align: center; margin-bottom: 20px;">
+‏                    <img id="profileModalAvatarImg" src="" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px;" alt="User Avatar">
+‏                    <h3 id="profileModalEmailText">user@email.com</h3>
+                    
+‏                    <div style="margin-top: 10px;">
+‏                        <button class="action-btn" style="background: #333; max-width: 200px; display: inline-block; font-size: 14px; padding: 8px;" onclick="document.getElementById('avatarFileInput').click()">تغيير صورة الحساب</button>
+‏                        <input type="file" id="avatarFileInput" accept="image/*" class="hidden" onchange="triggerImageCrop(this)">
+‏                    </div>
+‏                </div>
+
+‏                <hr style="border-color: #333; margin: 20px 0;">
+
+                <!-- زر الدخول لصفحة التنزيلات الكاملة -->
+‏                <div style="margin-bottom: 20px;">
+‏                    <div onclick="openDownloadsPage()" style="background: #222; border: 1px solid #333; padding: 15px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='#333'">
+‏                        <span style="font-weight: bold; display: flex; align-items: center; gap: 8px;">📥 الفيديوهات والوسائط التي تم تنزيلها</span>
+‏                        <span style="color: var(--gray);">←</span>
+‏                    </div>
+‏                </div>
+
+‏                <hr style="border-color: #333; margin: 20px 0;">
+
+                <!-- إعدادات اللغة (5 لغات أساسية) -->
+‏                <div style="margin-bottom: 20px;">
+‏                    <label style="font-size: 14px; color: var(--gray); display: block; margin-bottom: 8px;" id="langLabelText">اختر لغة الموقع الأساسية:</label>
+‏                    <select id="siteLanguageSelect" onchange="changeSiteLanguage(this.value)" style="margin-top: 0;">
+‏                        <option value="ar">العربية (Arabic)</option>
+‏                        <option value="en">الإنجليزية (English)</option>
+‏                        <option value="ja">اليابانية (Japanese - 日本語)</option>
+‏                        <option value="de">الألمانية (German - Deutsch)</option>
+‏                        <option value="fr">الفرنسية (French - Français)</option>
+‏                    </select>
+‏                </div>
+
+‏                <hr style="border-color: #333; margin: 20px 0;">
+
+                <!-- تبديل الحسابات (بحد أقصى 5 حسابات) -->
+‏                <div style="margin-bottom: 20px;">
+‏                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+‏                        <h4 id="accountsListTitle">الحسابات المحفوظة على هذا الجهاز (الحد الأقصى 5)</h4>
+‏                        <button class="action-btn" style="width: auto; padding: 6px 12px; font-size: 13px;" onclick="showAddAnotherAccountBox()">+ إضافة حساب آخر</button>
+‏                    </div>
+
+                    <!-- نموذج إضافة حساب جديد سريع -->
+‏                    <div id="addAnotherAccountContainer" class="hidden" style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+‏                        <input type="email" id="newAccountEmail" placeholder="البريد الإلكتروني للحساب الجديد">
+‏                        <input type="password" id="newAccountPass" placeholder="كلمة المرور">
+‏                        <button class="action-btn" onclick="saveAnotherAccount()">حفظ وإضافة الحساب</button>
+‏                    </div>
+
+‏                    <div id="savedAccountsListContainer"></div>
+‏                </div>
+
+‏                <hr style="border-color: #333; margin: 20px 0;">
+
+‏                <button class="action-btn" style="background: #d9534f;" onclick="confirmLogout()">تسجيل الخروج من الحساب الحالي</button>
+‏            </div>
+‏        </div>
+
+        <!-- صفحة التنزيلات الكاملة بتبويبي (الفيديوهات / الصور) -->
+‏        <div id="downloadsPage" class="full-page-overlay" style="display: none;">
+‏            <div class="page-header">
+‏                <button onclick="closeDownloadsPage()">⬅ عودة</button>
+‏                <h2>التنزيلات والوسائط المحفوظة</h2>
+‏            </div>
+            
+‏            <div class="tabs-container">
+‏                <button class="tab-btn active" onclick="switchDownloadsTab('videos', this)">الفيديوهات</button>
+‏                <button class="tab-btn" onclick="switchDownloadsTab('images', this)">الصور</button>
+‏            </div>
+
+‏            <div id="videosDownloadsTab" class="downloads-tab-content">
+‏                <div id="videosDownloadsGrid" class="grid"></div>
+‏            </div>
+            
+‏            <div id="imagesDownloadsTab" class="downloads-tab-content hidden">
+‏                <div id="imagesDownloadsGrid" class="grid"></div>
+‏            </div>
+‏        </div>
+
+        <!-- نافذة تعديل صورة الملف الشخصي (Crop Modal - شبيهة بالواتساب) -->
+‏        <div id="cropModal" class="crop-modal" style="display: none;">
+‏            <div class="crop-container">
+‏                <h3>تعديل صورة الملف الشخصي</h3>
+‏                <div class="image-crop-area" id="imageCropArea">
+‏                    <img id="imageToCrop" src="" alt="تعديل الصورة">
+‏                </div>
+‏                <div class="crop-controls">
+‏                    <label style="font-size:13px; color:var(--gray);">تكبير / تصغير:</label>
+‏                    <input type="range" id="zoomRange" min="1" max="3" step="0.1" value="1" oninput="adjustZoom(this.value)">
+‏                </div>
+‏                <div class="crop-actions">
+‏                    <button onclick="closeCropModal()">إلغاء</button>
+‏                    <button class="save-btn" onclick="saveCroppedImage()">تم وحفظ</button>
+‏                </div>
+‏            </div>
+‏        </div>
 
         <!-- نافذة لوحة تحكم المشرف المنبثقة -->
-        <div id="adminOverlay" class="admin-overlay hidden">
-            <div class="admin-modal">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>لوحة تحكم المشرف</h2>
-                    <button onclick="closeAdminPanel()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
-                </div>
+‏        <div id="adminOverlay" class="modal-overlay hidden">
+‏            <div class="modal-content">
+‏                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+‏                    <h2>لوحة تحكم المشرف</h2>
+‏                    <button onclick="closeAdminPanel()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">إغلاق X</button>
+‏                </div>
 
                 <!-- القائمة الرئيسية للأزرار -->
-                <div id="adminMenuButtons" class="admin-menu-buttons">
-                    <button class="admin-menu-btn" onclick="openAdminSection('sectionsManager')">
-                        <span>إدارة الأقسام الرئيسية والفرعية</span>
-                        <span>📂</span>
-                    </button>
-                    <button class="admin-menu-btn" onclick="openAdminSection('theme')">
-                        <span>تغيير ألوان وخلفية الموقع</span>
-                        <span>🎨</span>
-                    </button>
-                    <button class="admin-menu-btn" onclick="openAdminSection('sitename')">
-                        <span>تغيير اسم الموقع</span>
-                        <span>✏️</span>
-                    </button>
-                    <button class="admin-menu-btn" onclick="openAdminSection('suggestions')">
-                        <span>عرض اقتراحات المستخدمين</span>
-                        <span>📥</span>
-                    </button>
-                    <button class="admin-menu-btn" onclick="openAdminSection('content')">
-                        <span>نشر الصور والفيديوهات</span>
-                        <span>🎬</span>
-                    </button>
-                </div>
+‏                <div id="adminMenuButtons" class="admin-menu-buttons">
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('sectionsManager')">
+‏                        <span>إدارة الأقسام الرئيسية والفرعية</span>
+‏                        <span>📂</span>
+‏                    </button>
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('boostStats')">
+‏                        <span>زيادة المشاهدات واللايكات للمحتوى</span>
+‏                        <span>📈</span>
+‏                    </button>
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('content')">
+‏                        <span>نشر محتوى جديد (فيديو يوتيوب / صورة / فيديو من الجهاز / مقال)</span>
+‏                        <span>🎬</span>
+‏                    </button>
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('theme')">
+‏                        <span>تغيير ألوان وخلفية الموقع</span>
+‏                        <span>🎨</span>
+‏                    </button>
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('sitename')">
+‏                        <span>تغيير اسم الموقع</span>
+‏                        <span>✏️</span>
+‏                    </button>
+‏                    <button class="admin-menu-btn" onclick="openAdminSection('suggestions')">
+‏                        <span>عرض اقتراحات المستخدمين</span>
+‏                        <span>📥</span>
+‏                    </button>
+‏                </div>
 
-                <!-- 1. قسم إدارة الأقسام الرئيسية والفرعية -->
-                <div id="subSectionSectionsManager" class="admin-sub-section hidden">
-                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>إدارة الأقسام الرئيسية</h3>
+                <!-- 1. قسم إدارة الأقسام -->
+‏                <div id="subSectionSectionsManager" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>إدارة الأقسام الرئيسية</h3>
+‏                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+‏                        <input type="text" id="manageSectionNameInput" placeholder="اسم القسم الرئيسي (مثال: المسلسلات، الأنمي)">
+‏                        <input type="password" id="manageSectionPassInput" placeholder="كلمة المرور الخاصة بالقسم (اتركها فارغة بدون كلمة مرور)">
+‏                        <button class="action-btn" onclick="saveSectionData()">حفظ القسم الرئيسي</button>
+‏                    </div>
+‏                    <h4>الأقسام الرئيسية الحالية:</h4>
+‏                    <div id="adminSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px; margin-bottom: 20px;"></div>
+
+‏                    <hr style="border-color: #333; margin: 15px 0;">
+
+‏                    <h3>إدارة الأقسام الفرعية</h3>
+‏                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+‏                        <label style="font-size:13px; color:var(--gray);">اختر القسم الرئيسي التابع له:</label>
+‏                        <select id="parentSectionSelectForSub" style="margin-top:5px; margin-bottom:10px;"></select>
+‏                        <input type="text" id="manageSubSectionNameInput" placeholder="اسم القسم الفرعي (مثال: مسلسلات تركية)">
+‏                        <button class="action-btn" onclick="saveSubSectionData()">حفظ القسم الفرعي</button>
+‏                    </div>
+‏                    <h4>الأقسام الفرعية الحالية:</h4>
+‏                    <div id="adminSubSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px;"></div>
+‏                </div>
+
+                <!-- 2. قسم زيادة المشاهدات واللايكات -->
+‏                <div id="subSectionBoostStats" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>زيادة المشاهدات واللايكات للمحتوى</h3>
+‏                    <label style="font-size: 13px; color: var(--gray);">اختر المحتوى:</label>
+‏                    <select id="boostVideoSelect" style="margin-top:5px; margin-bottom:10px;" onchange="loadVideoStatsToForm()"></select>
+‏                    <label style="font-size: 13px; color: var(--gray);">عدد المشاهدات / القراءات الجديد:</label>
+‏                    <input type="number" id="boostViewsInput" placeholder="عدد المشاهدات">
+‏                    <label style="font-size: 13px; color: var(--gray);">عدد اللايكات الجديد:</label>
+‏                    <input type="number" id="boostLikesInput" placeholder="عدد اللايكات">
+‏                    <button class="action-btn" onclick="saveBoostStats()">تحديث وإضافة المشاهدات واللايكات</button>
+‏                </div>
+
+                <!-- 3. قسم نشر المحتوى -->
+‏                <div id="subSectionContent" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>نشر محتوى جديد (تخزين ضخم آمن)</h3>
                     
-                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
-                        <h4 id="sectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم رئيسي جديد</h4>
-                        <input type="hidden" id="editingSectionId" value="">
-                        <input type="text" id="manageSectionNameInput" placeholder="اسم القسم الرئيسي (مثال: المسلسلات، الأنمي)">
-                        <input type="password" id="manageSectionPassInput" placeholder="كلمة المرور الخاصة بالقسم (اتركها فارغة بدون كلمة مرور)">
-                        <button class="action-btn" id="saveSectionBtn" onclick="saveSectionData()">حفظ القسم الرئيسي</button>
-                        <button class="action-btn hidden" id="cancelEditSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSectionForm()">إلغاء التعديل</button>
-                    </div>
+‏                    <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">اختر نوع المحتوى:</label>
+‏                    <select id="contentTypeSelect" onchange="toggleContentTypeFields()" style="margin-top:5px; margin-bottom:10px;">
+‏                        <option value="youtube">فيديو يوتيوب (مع غلاف من جهازك)</option>
+‏                        <option value="localvideo">فيديو من جهازك (مباشرة)</option>
+‏                        <option value="image">صورة من جهازك</option>
+‏                        <option value="article">مقال نصي</option>
+‏                    </select>
 
-                    <h4>الأقسام الرئيسية الحالية:</h4>
-                    <div id="adminSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px; margin-bottom: 20px;"></div>
-
-                    <hr style="border-color: #333; margin: 15px 0;">
-
-                    <!-- إدارة الأقسام الفرعية (للمسلسلات والأنمي) -->
-                    <h3>إدارة الأقسام الفرعية (تحت المسلسلات أو الأنمي)</h3>
-                    <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
-                        <h4 id="subSectionFormTitle" style="margin-bottom: 10px; color: var(--primary);">إضافة قسم فرعي جديد</h4>
-                        <input type="hidden" id="editingSubSectionId" value="">
-                        
-                        <label style="font-size:13px; color:var(--gray);">اختر القسم الرئيسي التابع له:</label>
-                        <select id="parentSectionSelectForSub" style="margin-top:5px; margin-bottom:10px;"></select>
-                        
-                        <input type="text" id="manageSubSectionNameInput" placeholder="اسم القسم الفرعي (مثال: مسلسلات تركية، ناروتو)">
-                        <button class="action-btn" id="saveSubSectionBtn" onclick="saveSubSectionData()">حفظ القسم الفرعي</button>
-                        <button class="action-btn hidden" id="cancelEditSubSectionBtn" style="background:#444; margin-top:5px;" onclick="resetSubSectionForm()">إلغاء التعديل</button>
-                    </div>
-
-                    <h4>الأقسام الفرعية الحالية:</h4>
-                    <div id="adminSubSectionsList" style="max-height: 200px; overflow-y: auto; margin-top: 10px;"></div>
-                </div>
-
-                <!-- 2. قسم تغيير الألوان والخلفية -->
-                <div id="subSectionTheme" class="admin-sub-section hidden">
-                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>تغيير ألوان وخلفية الموقع</h3>
-                    <label style="font-size: 14px; color: var(--gray);">اللون الأساسي:</label>
-                    <input type="color" id="primaryColorPicker" value="#e50914" style="height: 40px; cursor: pointer;">
+‏                    <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الرئيسي:</label>
+‏                    <select id="contentSectionSelect" onchange="populateSubSectionSelectForPublish()"></select>
                     
-                    <label style="font-size: 14px; color: var(--gray); margin-top: 10px; display: block;">لون الخلفية:</label>
-                    <input type="color" id="bgColorPicker" value="#141414" style="height: 40px; cursor: pointer;">
-                    <button class="action-btn" onclick="updateSiteTheme()">حفظ وتطبيق الألوان والخلفية</button>
-                </div>
+‏                    <div id="subSectionPublishContainer" class="hidden">
+‏                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الفرعي:</label>
+‏                        <select id="contentSubSectionSelect"></select>
+‏                    </div>
 
-                <!-- 3. قسم تغيير اسم الموقع -->
-                <div id="subSectionSiteName" class="admin-sub-section hidden">
-                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>تغيير اسم الموقع</h3>
-                    <input type="text" id="newSiteNameInput" placeholder="اكتب اسم الموقع الجديد هنا">
-                    <button class="action-btn" onclick="updateSiteName()">تحديث اسم الموقع</button>
-                </div>
-
-                <!-- 4. قسم عرض الاقتراحات -->
-                <div id="subSectionSuggestions" class="admin-sub-section hidden">
-                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>اقتراحات المستخدمين المستلمة</h3>
-                    <div id="adminSuggestionsList" style="max-height: 250px; overflow-y: auto; margin-top: 10px;">
-                        <p style="color: var(--gray);">لا توجد اقتراحات جديدة حالياً.</p>
-                    </div>
-                </div>
-
-                <!-- 5. قسم نشر الصور والفيديوهات -->
-                <div id="subSectionContent" class="admin-sub-section hidden">
-                    <button class="back-to-admin-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
-                    <h3>نشر الصور والفيديوهات</h3>
+‏                    <input type="text" id="contentTitle" placeholder="عنوان المحتوى">
+‏                    <textarea id="contentDesc" placeholder="وصف موجز يظهر في البطاقة..."></textarea>
                     
-                    <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الرئيسي:</label>
-                    <select id="contentSectionSelect" onchange="populateSubSectionSelectForPublish()"></select>
+                    <!-- يوتيوب -->
+‏                    <div id="youtubeFieldsContainer">
+‏                        <input type="text" id="contentYoutubeUrl" placeholder="رابط يوتيوب">
+‏                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">صورة الغلاف (من جهازك):</label>
+‏                        <div class="upload-box" onclick="document.getElementById('thumbFile').click()">
+‏                            <span id="thumbFileText">اختر صورة الغلاف</span>
+‏                            <input type="file" id="thumbFile" accept="image/*" class="hidden" onchange="previewFileLabel(this, 'thumbFileText')">
+‏                        </div>
+‏                    </div>
+
+                    <!-- فيديو محلي -->
+‏                    <div id="localVideoFieldsContainer" class="hidden">
+‏                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">اختر ملف الفيديو من الآيباد:</label>
+‏                        <div class="upload-box" onclick="document.getElementById('localVideoFile').click()">
+‏                            <span id="localVideoText">اختر ملف الفيديو (MP4 أو غيره)</span>
+‏                            <input type="file" id="localVideoFile" accept="video/*" class="hidden" onchange="previewFileLabel(this, 'localVideoText')">
+‏                        </div>
+‏                    </div>
+
+                    <!-- صورة محلية -->
+‏                    <div id="imageFieldsContainer" class="hidden">
+‏                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">اختر الصورة من الجهاز:</label>
+‏                        <div class="upload-box" onclick="document.getElementById('localImageFile').click()">
+‏                            <span id="localImageText">اختر الصورة</span>
+‏                            <input type="file" id="localImageFile" accept="image/*" class="hidden" onchange="previewFileLabel(this, 'localImageText')">
+‏                        </div>
+‏                    </div>
+
+                    <!-- مقال -->
+‏                    <div id="articleFieldsContainer" class="hidden">
+‏                        <textarea id="contentArticleBody" placeholder="اكتب نص المقال الكامل هنا..." style="height: 120px;"></textarea>
+‏                    </div>
                     
-                    <div id="subSectionPublishContainer" class="hidden">
-                        <label style="margin-top:5px; display:block; color:var(--gray); font-size:13px;">القسم الفرعي:</label>
-                        <select id="contentSubSectionSelect"></select>
-                    </div>
+‏                    <button class="action-btn" onclick="publishContentIndexedDB()">نشر الآن</button>
+‏                </div>
 
-                    <input type="text" id="contentTitle" placeholder="عنوان المحتوى">
-                    <textarea id="contentDesc" placeholder="وصف المحتوى"></textarea>
-                    
-                    <label style="margin-top:10px; display:block; color:var(--gray); font-size:14px;">صورة الغلاف:</label>
-                    <div class="upload-box" onclick="document.getElementById('contentImage').click()">
-                        <span style="font-size: 24px;">📷</span>
-                        <p id="imgFileName">اضغط لاختيار صورة الغلاف من المعرض</p>
-                    </div>
-                    <input type="file" id="contentImage" accept="image/*" class="hidden" onchange="updateFileName('contentImage', 'imgFileName')">
-                    
-                    <label style="margin-top:10px; display:block; color:var(--gray); font-size:14px;">ملف الفيديو:</label>
-                    <div class="upload-box" onclick="document.getElementById('contentVideo').click()">
-                        <span style="font-size: 24px;">🎥</span>
-                        <p id="vidFileName">اضغط لاختيار ملف الفيديو من المعرض</p>
-                    </div>
-                    <input type="file" id="contentVideo" accept="video/*" class="hidden" onchange="updateFileName('contentVideo', 'vidFileName')">
-                    
-                    <button class="action-btn" onclick="publishContent()">نشر المحتوى</button>
-                </div>
+                <!-- 4. تغيير الألوان -->
+‏                <div id="subSectionTheme" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>تغيير ألوان وخلفية الموقع</h3>
+‏                    <label style="font-size: 14px; color: var(--gray);">اللون الأساسي:</label>
+‏                    <input type="color" id="primaryColorPicker" value="#e50914" style="height: 40px; cursor: pointer;">
+‏                    <label style="font-size: 14px; color: var(--gray); margin-top: 10px; display: block;">لون الخلفية:</label>
+‏                    <input type="color" id="bgColorPicker" value="#141414" style="height: 40px; cursor: pointer;">
+‏                    <button class="action-btn" onclick="updateSiteTheme()">حفظ وتطبيق الألوان</button>
+‏                </div>
 
-            </div>
-        </div>
+                <!-- 5. تغيير اسم الموقع -->
+‏                <div id="subSectionSiteName" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>تغيير اسم الموقع</h3>
+‏                    <input type="text" id="newSiteNameInput" placeholder="اسم الموقع الجديد">
+‏                    <button class="action-btn" onclick="updateSiteName()">تحديث الاسم</button>
+‏                </div>
 
-        <div id="mainContentArea"></div>
+                <!-- 6. اقتراحات المستخدمين -->
+‏                <div id="subSectionSuggestions" class="admin-sub-section hidden">
+‏                    <button class="back-to-menu" onclick="backToAdminMenu()">← رجوع لقائمة لوحة المشرف</button>
+‏                    <h3>اقتراحات المستخدمين</h3>
+‏                    <div id="adminSuggestionsList" style="max-height: 250px; overflow-y: auto; margin-top: 10px;"></div>
+‏                </div>
 
-    </div>
+‏            </div>
+‏        </div>
 
-    <script>
-        (function() {
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
-                    e.preventDefault();
-                    alert('هذا الإجراء غير مسموح به لأسباب أمنية!');
-                }
+‏        <div id="mainContentArea"></div>
+
+‏    </div>
+
+‏    <script>
+‏        let db;
+‏        const dbName = "EsultanMediaDB";
+‏        const storeName = "mediaStore";
+
+‏        function initIndexedDB() {
+‏            return new Promise((resolve, reject) => {
+‏                const request = indexedDB.open(dbName, 1);
+‏                request.onerror = () => reject(request.error);
+‏                request.onsuccess = () => {
+‏                    db = request.result;
+‏                    resolve(db);
+                };
+‏                request.onupgradeneeded = (e) => {
+‏                    const database = e.target.result;
+‏                    if (!database.objectStoreNames.contains(storeName)) {
+‏                        database.createObjectStore(storeName, { keyPath: "id" });
+                    }
+                };
             });
-        })();
-
-        let currentUser = JSON.parse(localStorage.getItem('esultan_current_user')) || null;
-        let isLoginMode = true;
-        let activeSectionId = null;
-        let activeSubSectionId = null;
-        let currentSearchQuery = '';
-        const unlockedSections = new Set();
-
-        if (!localStorage.getItem('esultan_sections')) {
-            const defaultSections = [
-                { id: 'sec_1', name: 'أحدث الأفلام', locked: false, password: '' },
-                { id: 'sec_2', name: 'المسلسلات', locked: false, password: '' },
-                { id: 'sec_3', name: 'الأنمي', locked: false, password: '' },
-                { id: 'sec_4', name: 'كرتون', locked: false, password: '' }
-            ];
-            localStorage.setItem('esultan_sections', JSON.stringify(defaultSections));
         }
 
-        if (!localStorage.getItem('esultan_sub_sections')) {
-            const defaultSubSections = [
-                { id: 'sub_1', parentSectionId: 'sec_2', name: 'مسلسلات تركية' },
-                { id: 'sub_2', parentSectionId: 'sec_2', name: 'مسلسلات رمضان' },
-                { id: 'sub_3', parentSectionId: 'sec_3', name: 'أنمي أكشن' },
-                { id: 'sub_4', parentSectionId: 'sec_3', name: 'أنمي غموض' }
-            ];
-            localStorage.setItem('esultan_sub_sections', JSON.stringify(defaultSubSections));
+‏        let currentUser = JSON.parse(localStorage.getItem('esultan_current_user')) || null;
+‏        let isLoginMode = true;
+‏        let activeSectionId = null;
+‏        let activeSubSectionId = null;
+‏        let currentSearchQuery = '';
+‏        const unlockedSections = new Set();
+
+‏        if (!localStorage.getItem('esultan_sections')) {
+‏            localStorage.setItem('esultan_sections', JSON.stringify([
+‏                { id: 'sec_1', name: 'أحدث الأفلام', locked: false, password: '' },
+‏                { id: 'sec_2', name: 'المسلسلات', locked: false, password: '' },
+‏                { id: 'sec_3', name: 'الأنمي', locked: false, password: '' },
+‏                { id: 'sec_4', name: 'المقالات والمنشورات', locked: false, password: '' }
+            ]));
         }
 
-        if (!localStorage.getItem('esultan_contents')) {
-            localStorage.setItem('esultan_contents', JSON.stringify([]));
+‏        if (!localStorage.getItem('esultan_sub_sections')) {
+‏            localStorage.setItem('esultan_sub_sections', JSON.stringify([
+‏                { id: 'sub_1', parentSectionId: 'sec_2', name: 'مسلسلات تركية' },
+‏                { id: 'sub_2', parentSectionId: 'sec_2', name: 'مسلسلات رمضان' },
+‏                { id: 'sub_3', parentSectionId: 'sec_3', name: 'أنمي أكشن' }
+            ]));
         }
 
-        if (!localStorage.getItem('esultan_suggestions')) {
-            localStorage.setItem('esultan_suggestions', JSON.stringify([]));
+‏        if (!localStorage.getItem('esultan_suggestions')) {
+‏            localStorage.setItem('esultan_suggestions', JSON.stringify([]));
         }
 
-        window.onload = function() {
-            checkAuthUI();
-            applySavedStyles();
-            loadSiteName();
-            initActiveSection();
-            renderCategoriesBar();
-            renderAppContent();
+‏        window.onload = async function() {
+‏            await initIndexedDB();
+‏            checkAuthUI();
+‏            applySavedStyles();
+‏            loadSiteName();
+‏            loadSavedLanguage();
+‏            initActiveSection();
+‏            renderCategoriesBar();
+‏            renderAppContent();
         };
 
-        function initActiveSection() {
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            if(sections.length > 0) {
-                if(!activeSectionId || !sections.some(s => s.id === activeSectionId)) {
-                    activeSectionId = sections[0].id;
-                }
+‏        function initActiveSection() {
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            if(sections.length > 0 && (!activeSectionId || !sections.some(s => s.id === activeSectionId))) {
+‏                activeSectionId = sections[0].id;
             }
         }
 
-        function initActiveSubSection(sectionId) {
-            let subSections = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === sectionId);
-            if(subSections.length > 0) {
-                if(!activeSubSectionId || !subSections.some(sub => sub.id === activeSubSectionId)) {
-                    activeSubSectionId = subSections[0].id;
+‏        function initActiveSubSection(sectionId) {
+‏            let subSections = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === sectionId);
+‏            if(subSections.length > 0) {
+‏                if(!activeSubSectionId || !subSections.some(sub => sub.id === activeSubSectionId)) {
+‏                    activeSubSectionId = subSections[0].id;
                 }
-            } else {
-                activeSubSectionId = null;
+‏            } else {
+‏                activeSubSectionId = null;
             }
         }
 
-        function renderCategoriesBar() {
-            const bar = document.getElementById('categoriesBar');
-            bar.innerHTML = '';
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏        function renderCategoriesBar() {
+‏            const bar = document.getElementById('categoriesBar');
+‏            bar.innerHTML = '';
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
 
-            sections.forEach(sec => {
-                const tab = document.createElement('div');
-                tab.className = `category-tab ${sec.id === activeSectionId ? 'active' : ''}`;
-                tab.innerHTML = `${sec.name} ${sec.locked && !unlockedSections.has(sec.id) ? '🔒' : ''}`;
-                tab.onclick = function() {
-                    activeSectionId = sec.id;
-                    currentSearchQuery = '';
-                    initActiveSubSection(sec.id);
-                    renderCategoriesBar();
-                    renderAppContent();
+‏            sections.forEach(sec => {
+‏                const tab = document.createElement('div');
+‏                tab.className = `category-tab ${sec.id === activeSectionId ? 'active' : ''}`;
+‏                tab.innerHTML = `${sec.name} ${sec.locked && !unlockedSections.has(sec.id) ? '🔒' : ''}`;
+‏                tab.onclick = function() {
+‏                    activeSectionId = sec.id;
+‏                    currentSearchQuery = '';
+‏                    initActiveSubSection(sec.id);
+‏                    renderCategoriesBar();
+‏                    renderAppContent();
                 };
-                bar.appendChild(tab);
+‏                bar.appendChild(tab);
             });
         }
 
-        function showAuth(mode) {
-            document.getElementById('suggestionBoxContainer').classList.add('hidden');
-            document.getElementById('authContainer').classList.remove('hidden');
-            if(mode === 'login') {
-                isLoginMode = true;
-                document.getElementById('authTitle').innerText = 'تسجيل الدخول';
-                document.getElementById('authSwitchText').innerText = 'ليس لديك حساب؟ إنشاء حساب جديد';
-            } else {
-                isLoginMode = false;
-                document.getElementById('authTitle').innerText = 'إنشاء حساب جديد';
-                document.getElementById('authSwitchText').innerText = 'لديك حساب بالفعل؟ تسجيل الدخول';
-            }
+‏        function showAuth(mode) {
+‏            document.getElementById('suggestionBoxContainer').classList.add('hidden');
+‏            document.getElementById('authContainer').classList.remove('hidden');
+‏            isLoginMode = (mode === 'login');
+‏            document.getElementById('authTitle').innerText = isLoginMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
+‏            document.getElementById('authSwitchText').innerText = isLoginMode ? 'ليس لديك حساب؟ إنشاء حساب جديد' : 'لديك حساب بالفعل؟ تسجيل الدخول';
         }
 
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            showAuth(isLoginMode ? 'login' : 'register');
+‏        function toggleAuthMode() {
+‏            isLoginMode = !isLoginMode;
+‏            showAuth(isLoginMode ? 'login' : 'register');
         }
 
-        function handleAuth() {
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
+‏        function handleAuth() {
+‏            const email = document.getElementById('authEmail').value.trim();
+‏            const password = document.getElementById('authPassword').value.trim();
+‏            if (!email || !password) return alert('أدخل البريد وكلمة المرور');
 
-            if (!email || !password) {
-                alert('الرجاء إدخال البريد الإلكتروني وكلمة المرور!');
-                return;
+‏            let role = 'user';
+‏            if (email === 'gojoesultan@gmail.com' && password === 'ahmedgojo123456789') {
+‏                role = 'admin';
             }
 
-            if (email === 'gojoesultan@gmail.com' && password === 'ahmedgojo123456789') {
-                currentUser = { email: email, role: 'admin' };
-                localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
-                alert('مرحباً بك أيها المشرف (Gojo Esultan)');
-                document.getElementById('authContainer').classList.add('hidden');
-                checkAuthUI();
-                renderAppContent();
-                return;
-            }
-
-            if (isLoginMode) {
-                let users = JSON.parse(localStorage.getItem('esultan_users')) || [];
-                let found = users.find(u => u.email === email && u.password === password);
-                if (found) {
-                    currentUser = { email: email, role: 'user' };
-                    localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
-                    alert('تم تسجيل الدخول بنجاح');
-                    document.getElementById('authContainer').classList.add('hidden');
-                    checkAuthUI();
-                } else {
-                    alert('بيانات الدخول غير صحيحة أو الحساب غير موجود!');
-                }
-            } else {
-                let users = JSON.parse(localStorage.getItem('esultan_users')) || [];
-                if (users.some(u => u.email === email)) {
-                    alert('هذا البريد مستخدم مسبقاً!');
-                    return;
-                }
-                users.push({ email, password });
-                localStorage.setItem('esultan_users', JSON.stringify(users));
-                alert('تم إنشاء الحساب بنجاح.');
-                toggleAuthMode();
-            }
-        }
-
-        function confirmLogout() {
-            if (confirm('هل أنت متأكد من رغبتك في تسجيل الخروج من المنصة؟')) {
-                currentUser = null;
-                localStorage.removeItem('esultan_current_user');
-                closeAdminPanel();
-                document.getElementById('suggestionBoxContainer').classList.add('hidden');
-                checkAuthUI();
-                renderAppContent();
-            }
-        }
-
-        function checkAuthUI() {
-            const loginBtn = document.getElementById('loginNavBtn');
-            const regBtn = document.getElementById('registerNavBtn');
-            const adminBtn = document.getElementById('adminNavBtn');
-            const suggestionUserBtn = document.getElementById('suggestionUserBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const welcome = document.getElementById('userWelcome');
-
-            if (currentUser) {
-                loginBtn.classList.add('hidden');
-                regBtn.classList.add('hidden');
-                logoutBtn.classList.remove('hidden');
-                welcome.innerText = `مرحباً: ${currentUser.email}`;
-
-                if (currentUser.role === 'admin') {
-                    adminBtn.classList.remove('hidden');
-                    suggestionUserBtn.classList.add('hidden');
-                } else {
-                    adminBtn.classList.add('hidden');
-                    suggestionUserBtn.classList.remove('hidden');
-                    closeAdminPanel();
-                }
-            } else {
-                loginBtn.classList.remove('hidden');
-                regBtn.classList.remove('hidden');
-                adminBtn.classList.add('hidden');
-                suggestionUserBtn.classList.add('hidden');
-                logoutBtn.classList.add('hidden');
-                welcome.innerText = '';
-                closeAdminPanel();
-                document.getElementById('suggestionBoxContainer').classList.add('hidden');
-            }
-        }
-
-        function openAdminPanel() {
-            document.getElementById('adminOverlay').classList.remove('hidden');
-            backToAdminMenu();
-            populateSectionSelects();
-            renderAdminSuggestions();
-            renderAdminSectionsList();
-            renderAdminSubSectionsList();
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminOverlay').classList.add('hidden');
-        }
-
-        function openAdminSection(sectionName) {
-            document.getElementById('adminMenuButtons').classList.add('hidden');
-            document.getElementById('subSectionSectionsManager').classList.add('hidden');
-            document.getElementById('subSectionTheme').classList.add('hidden');
-            document.getElementById('subSectionSiteName').classList.add('hidden');
-            document.getElementById('subSectionSuggestions').classList.add('hidden');
-            document.getElementById('subSectionContent').classList.add('hidden');
-
-            if(sectionName === 'sectionsManager') {
-                document.getElementById('subSectionSectionsManager').classList.remove('hidden');
-                renderAdminSectionsList();
-                renderAdminSubSectionsList();
-                populateSectionSelects();
-            } else if(sectionName === 'theme') {
-                document.getElementById('subSectionTheme').classList.remove('hidden');
-            } else if(sectionName === 'sitename') {
-                document.getElementById('subSectionSiteName').classList.remove('hidden');
-            } else if(sectionName === 'suggestions') {
-                document.getElementById('subSectionSuggestions').classList.remove('hidden');
-            } else if(sectionName === 'content') {
-                document.getElementById('subSectionContent').classList.remove('hidden');
-                populateSectionSelects();
-            }
-        }
-
-        function backToAdminMenu() {
-            document.getElementById('adminMenuButtons').classList.remove('hidden');
-            document.getElementById('subSectionSectionsManager').classList.add('hidden');
-            document.getElementById('subSectionTheme').classList.add('hidden');
-            document.getElementById('subSectionSiteName').classList.add('hidden');
-            document.getElementById('subSectionSuggestions').classList.add('hidden');
-            document.getElementById('subSectionContent').classList.add('hidden');
-            resetSectionForm();
-            resetSubSectionForm();
-        }
-
-        // إدارة الأقسام الرئيسية
-        function renderAdminSectionsList() {
-            const listContainer = document.getElementById('adminSectionsList');
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-
-            if (sections.length === 0) {
-                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام رئيسية حالياً.</p>';
-                return;
-            }
-
-            listContainer.innerHTML = '';
-            sections.forEach(sec => {
-                const div = document.createElement('div');
-                div.className = 'section-manage-item';
-                div.innerHTML = `
-                    <div>
-                        <span style="font-weight: bold; font-size: 14px;">${sec.name}</span>
-                        <div style="font-size: 11px; color: ${sec.locked ? '#d9534f' : 'var(--gray);'} margin-top: 2px;">
-                            ${sec.locked ? `مغلق بكلمة مرور: (${sec.password})` : 'بدون كلمة مرور'}
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 6px;">
-                        <button onclick="editSection('${sec.id}')" style="background:#337ab7; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
-                        <button onclick="deleteSection('${sec.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
-                    </div>
-                `;
-                listContainer.appendChild(div);
-            });
-        }
-
-        function saveSectionData() {
-            const secId = document.getElementById('editingSectionId').value;
-            const name = document.getElementById('manageSectionNameInput').value.trim();
-            const password = document.getElementById('manageSectionPassInput').value.trim();
-
-            if (!name) {
-                alert('الرجاء كتابة اسم القسم الرئيسي!');
-                return;
-            }
-
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-
-            if (secId) {
-                let sec = sections.find(s => s.id === secId);
-                if (sec) {
-                    sec.name = name;
-                    sec.password = password;
-                    sec.locked = password !== '';
-                }
-                alert('تم تعديل القسم الرئيسي بنجاح!');
-            } else {
-                const newId = 'sec_' + Date.now();
-                sections.push({
-                    id: newId,
-                    name: name,
-                    locked: password !== '',
-                    password: password
-                });
-                alert('تم إضافة القسم الرئيسي بنجاح!');
-            }
-
-            localStorage.setItem('esultan_sections', JSON.stringify(sections));
-            resetSectionForm();
-            renderAdminSectionsList();
-            renderCategoriesBar();
-            populateSectionSelects();
-            renderAppContent();
-        }
-
-        function editSection(id) {
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            let sec = sections.find(s => s.id === id);
-            if (sec) {
-                document.getElementById('editingSectionId').value = sec.id;
-                document.getElementById('manageSectionNameInput').value = sec.name;
-                document.getElementById('manageSectionPassInput').value = sec.password || '';
-                document.getElementById('sectionFormTitle').innerText = 'تعديل القسم الرئيسي';
-                document.getElementById('saveSectionBtn').innerText = 'حفظ التعديلات';
-                document.getElementById('cancelEditSectionBtn').classList.remove('hidden');
-            }
-        }
-
-        function resetSectionForm() {
-            document.getElementById('editingSectionId').value = '';
-            document.getElementById('manageSectionNameInput').value = '';
-            document.getElementById('manageSectionPassInput').value = '';
-            document.getElementById('sectionFormTitle').innerText = 'إضافة قسم رئيسي جديد';
-            document.getElementById('saveSectionBtn').innerText = 'حفظ القسم الرئيسي';
-            document.getElementById('cancelEditSectionBtn').classList.add('hidden');
-        }
-
-        function deleteSection(id) {
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            if (sections.length <= 1) {
-                alert('لا يمكنك حذف جميع الأقسام الرئيسية!');
-                return;
-            }
-
-            if (confirm('هل أنت متأكد من حذف هذا القسم الرئيسي؟ سيتم حذف الأقسام الفرعية والمحتويات التابعة له أيضاً!')) {
-                sections = sections.filter(s => s.id !== id);
-                localStorage.setItem('esultan_sections', JSON.stringify(sections));
-
-                let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-                subSections = subSections.filter(sub => sub.parentSectionId !== id);
-                localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
-
-                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
-                contents = contents.filter(c => c.sectionId !== id);
-                localStorage.setItem('esultan_contents', JSON.stringify(contents));
-
-                unlockedSections.delete(id);
-                initActiveSection();
-                renderAdminSectionsList();
-                renderAdminSubSectionsList();
-                renderCategoriesBar();
-                populateSectionSelects();
-                renderAppContent();
-                alert('تم حذف القسم بنجاح.');
-            }
-        }
-
-        // إدارة الأقسام الفرعية
-        function renderAdminSubSectionsList() {
-            const listContainer = document.getElementById('adminSubSectionsList');
-            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-
-            if (subSections.length === 0) {
-                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد أقسام فرعية حالياً.</p>';
-                return;
-            }
-
-            listContainer.innerHTML = '';
-            subSections.forEach(sub => {
-                let parent = sections.find(s => s.id === sub.parentSectionId);
-                let parentName = parent ? parent.name : 'غير معروف';
-                const div = document.createElement('div');
-                div.className = 'section-manage-item';
-                div.innerHTML = `
-                    <div>
-                        <span style="font-weight: bold; font-size: 14px;">${sub.name}</span>
-                        <div style="font-size: 11px; color: var(--gray); margin-top: 2px;">القسم الرئيسي: ${parentName}</div>
-                    </div>
-                    <div style="display: flex; gap: 6px;">
-                        <button onclick="editSubSection('${sub.id}')" style="background:#337ab7; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">تعديل</button>
-                        <button onclick="deleteSubSection('${sub.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
-                    </div>
-                `;
-                listContainer.appendChild(div);
-            });
-        }
-
-        function saveSubSectionData() {
-            const subId = document.getElementById('editingSubSectionId').value;
-            const parentId = document.getElementById('parentSectionSelectForSub').value;
-            const name = document.getElementById('manageSubSectionNameInput').value.trim();
-
-            if (!name || !parentId) {
-                alert('الرجاء اختيار القسم الرئيسي وكتابة اسم القسم الفرعي!');
-                return;
-            }
-
-            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-
-            if (subId) {
-                let sub = subSections.find(s => s.id === subId);
-                if (sub) {
-                    sub.parentSectionId = parentId;
-                    sub.name = name;
-                }
-                alert('تم تعديل القسم الفرعي بنجاح!');
-            } else {
-                const newId = 'sub_' + Date.now();
-                subSections.push({
-                    id: newId,
-                    parentSectionId: parentId,
-                    name: name
-                });
-                alert('تم إضافة القسم الفرعي بنجاح!');
-            }
-
-            localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
-            resetSubSectionForm();
-            renderAdminSubSectionsList();
-            renderAppContent();
-        }
-
-        function editSubSection(id) {
-            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-            let sub = subSections.find(s => s.id === id);
-            if (sub) {
-                document.getElementById('editingSubSectionId').value = sub.id;
-                document.getElementById('parentSectionSelectForSub').value = sub.parentSectionId;
-                document.getElementById('manageSubSectionNameInput').value = sub.name;
-                document.getElementById('subSectionFormTitle').innerText = 'تعديل القسم الفرعي';
-                document.getElementById('saveSubSectionBtn').innerText = 'حفظ التعديلات';
-                document.getElementById('cancelEditSubSectionBtn').classList.remove('hidden');
-            }
-        }
-
-        function resetSubSectionForm() {
-            document.getElementById('editingSubSectionId').value = '';
-            document.getElementById('manageSubSectionNameInput').value = '';
-            document.getElementById('subSectionFormTitle').innerText = 'إضافة قسم فرعي جديد';
-            document.getElementById('saveSubSectionBtn').innerText = 'حفظ القسم الفرعي';
-            document.getElementById('cancelEditSubSectionBtn').classList.add('hidden');
-        }
-
-        function deleteSubSection(id) {
-            if (confirm('هل أنت متأكد من حذف هذا القسم الفرعي؟ سيتم حذف محتوياته أيضاً!')) {
-                let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-                subSections = subSections.filter(s => s.id !== id);
-                localStorage.setItem('esultan_sub_sections', JSON.stringify(subSections));
-
-                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
-                contents = contents.filter(c => c.subSectionId !== id);
-                localStorage.setItem('esultan_contents', JSON.stringify(contents));
-
-                renderAdminSubSectionsList();
-                renderAppContent();
-                alert('تم حذف القسم الفرعي بنجاح.');
-            }
-        }
-
-        function showSuggestionModal() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('suggestionBoxContainer').classList.toggle('hidden');
-        }
-
-        function submitSuggestion() {
-            const text = document.getElementById('userSuggestionInput').value.trim();
-            if (!text) {
-                alert('الرجاء كتابة اقتراحك أولاً!');
-                return;
-            }
-
-            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
-            suggestions.push({
-                id: Date.now(),
-                user: currentUser.email,
-                text: text,
-                date: new Date().toLocaleDateString('ar-EG')
-            });
-
-            localStorage.setItem('esultan_suggestions', JSON.stringify(suggestions));
-            alert('تم إرسال اقتراحك للمشرف بنجاح، شكراً لك!');
-            document.getElementById('userSuggestionInput').value = '';
-            document.getElementById('suggestionBoxContainer').classList.add('hidden');
-        }
-
-        function renderAdminSuggestions() {
-            const listContainer = document.getElementById('adminSuggestionsList');
-            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
-
-            if (suggestions.length === 0) {
-                listContainer.innerHTML = '<p style="color: var(--gray);">لا توجد اقتراحات جديدة حالياً.</p>';
-                return;
-            }
-
-            listContainer.innerHTML = '';
-            suggestions.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.innerHTML = `
-                    <div>
-                        <div style="font-size: 13px; color: var(--primary); margin-bottom: 4px;">من: ${item.user} (${item.date})</div>
-                        <div style="font-size: 14px; margin-bottom: 8px;">${item.text}</div>
-                    </div>
-                    <button onclick="deleteSuggestion(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:12px;">حذف</button>
-                `;
-                listContainer.appendChild(div);
-            });
-        }
-
-        function deleteSuggestion(id) {
-            let suggestions = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
-            suggestions = suggestions.filter(s => s.id !== id);
-            localStorage.setItem('esultan_suggestions', JSON.stringify(suggestions));
-            renderAdminSuggestions();
-        }
-
-        function updateFileName(inputId, textId) {
-            const input = document.getElementById(inputId);
-            const textEl = document.getElementById(textId);
-            if (input.files && input.files[0]) {
-                textEl.innerText = "تم اختيار: " + input.files[0].name;
-                textEl.style.color = "#4CAF50";
-            }
-        }
-
-        function updateSiteTheme() {
-            const primary = document.getElementById('primaryColorPicker').value;
-            const bg = document.getElementById('bgColorPicker').value;
+‏            let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
             
-            localStorage.setItem('esultan_primary', primary);
-            localStorage.setItem('esultan_bg', bg);
-            applySavedStyles();
-            alert('تم حفظ وتطبيق الألوان والخلفية بنجاح!');
-        }
-
-        function applySavedStyles() {
-            const primary = localStorage.getItem('esultan_primary');
-            const bg = localStorage.getItem('esultan_bg');
-            if (primary) {
-                document.documentElement.style.setProperty('--primary', primary);
-                document.getElementById('primaryColorPicker').value = primary;
-            }
-            if (bg) {
-                document.documentElement.style.setProperty('--bg', bg);
-                document.getElementById('bgColorPicker').value = bg;
-            }
-        }
-
-        function updateSiteName() {
-            const newName = document.getElementById('newSiteNameInput').value.trim();
-            if (!newName) {
-                alert('الرجاء كتابة اسم الموقع الجديد!');
-                return;
-            }
-            localStorage.setItem('esultan_site_name', newName);
-            loadSiteName();
-            document.getElementById('newSiteNameInput').value = '';
-            alert('تم تحديث اسم الموقع بنجاح!');
-        }
-
-        function loadSiteName() {
-            const savedName = localStorage.getItem('esultan_site_name');
-            if (savedName) {
-                document.getElementById('siteLogoText').innerText = savedName;
-                document.getElementById('pageTitle').innerText = savedName;
-            }
-        }
-
-        function populateSectionSelects() {
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            
-            // سيلكت الأقسام الفرعية للإدارة
-            let selSubParent = document.getElementById('parentSectionSelectForSub');
-            selSubParent.innerHTML = '';
-            sections.forEach(sec => {
-                let opt = document.createElement('option');
-                opt.value = sec.id;
-                opt.innerText = sec.name;
-                selSubParent.appendChild(opt);
-            });
-
-            // سيلكت النشر الرئيسي
-            let selPub = document.getElementById('contentSectionSelect');
-            selPub.innerHTML = '';
-            sections.forEach(sec => {
-                let opt = document.createElement('option');
-                opt.value = sec.id;
-                opt.innerText = sec.name;
-                selPub.appendChild(opt);
-            });
-            populateSubSectionSelectForPublish();
-        }
-
-        function populateSubSectionSelectForPublish() {
-            const parentId = document.getElementById('contentSectionSelect').value;
-            const subContainer = document.getElementById('subSectionPublishContainer');
-            let subSelect = document.getElementById('contentSubSectionSelect');
-            subSelect.innerHTML = '';
-
-            let subSections = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === parentId);
-
-            if (subSections.length > 0) {
-                subContainer.classList.remove('hidden');
-                subSections.forEach(sub => {
-                    let opt = document.createElement('option');
-                    opt.value = sub.id;
-                    opt.innerText = sub.name;
-                    subSelect.appendChild(opt);
-                });
-            } else {
-                subContainer.classList.add('hidden');
-            }
-        }
-
-        function publishContent() {
-            const sectionId = document.getElementById('contentSectionSelect').value;
-            const subContainer = document.getElementById('subSectionPublishContainer');
-            let subSectionId = null;
-
-            if (!subContainer.classList.contains('hidden')) {
-                subSectionId = document.getElementById('contentSubSectionSelect').value;
-            }
-
-            const title = document.getElementById('contentTitle').value.trim();
-            const desc = document.getElementById('contentDesc').value.trim();
-            const imgFile = document.getElementById('contentImage').files[0];
-            const vidFile = document.getElementById('contentVideo').files[0];
-
-            if (!sectionId || !title || !imgFile || !vidFile) {
-                alert('الرجاء التأكد من اختيار القسم، تعبئة العنوان، واختيار صورة الغلاف وفيديو من المعرض!');
-                return;
-            }
-
-            const readerImg = new FileReader();
-            readerImg.onload = function(eImg) {
-                const imgData = eImg.target.result;
-
-                const readerVid = new FileReader();
-                readerVid.onload = function(eVid) {
-                    const vidData = eVid.target.result;
-
-                    let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
-                    contents.push({
-                        id: Date.now(),
-                        sectionId: sectionId,
-                        subSectionId: subSectionId,
-                        title: title,
-                        desc: desc,
-                        image: imgData,
-                        video: vidData
-                    });
-
-                    localStorage.setItem('esultan_contents', JSON.stringify(contents));
-                    alert('تم نشر المحتوى بنجاح!');
-                    
-                    document.getElementById('contentTitle').value = '';
-                    document.getElementById('contentDesc').value = '';
-                    document.getElementById('contentImage').value = '';
-                    document.getElementById('contentVideo').value = '';
-                    document.getElementById('imgFileName').innerText = 'اضغط لاختيار صورة الغلاف من المعرض';
-                    document.getElementById('imgFileName').style.color = 'var(--gray)';
-                    document.getElementById('vidFileName').innerText = 'اضغط لاختيار ملف الفيديو من المعرض';
-                    document.getElementById('vidFileName').style.color = 'var(--gray)';
-                    
-                    activeSectionId = sectionId;
-                    if(subSectionId) activeSubSectionId = subSectionId;
-                    renderCategoriesBar();
-                    renderAppContent();
-                };
-                readerVid.readAsDataURL(vidFile);
+‏            let existingIdx = accounts.findIndex(acc => acc.email === email);
+‏            let userObj = {
+‏                email,
+‏                password,
+‏                role,
+‏                avatar: existingIdx !== -1 ? accounts[existingIdx].avatar : ''
             };
-            readerImg.readAsDataURL(imgFile);
+
+‏            if (existingIdx !== -1) {
+‏                accounts[existingIdx] = userObj;
+‏            } else {
+‏                if (accounts.length >= 5) {
+‏                    return alert('عذراً، الحد الأقصى المسموح به هو 5 حسابات على هذا الجهاز!');
+                }
+‏                accounts.push(userObj);
+            }
+
+‏            localStorage.setItem('esultan_saved_accounts', JSON.stringify(accounts));
+‏            currentUser = userObj;
+‏            localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+
+‏            alert('تم تسجيل الدخول بنجاح');
+‏            document.getElementById('authContainer').classList.add('hidden');
+‏            checkAuthUI();
+‏            renderAppContent();
         }
 
-        function deleteContent(contentId) {
-            if(confirm('هل تريد حذف هذا المحتوى؟')) {
-                let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
-                contents = contents.filter(c => c.id !== contentId);
-                localStorage.setItem('esultan_contents', JSON.stringify(contents));
-                renderAppContent();
+‏        function confirmLogout() {
+‏            if (confirm('هل تريد تسجيل الخروج؟')) {
+‏                currentUser = null;
+‏                localStorage.removeItem('esultan_current_user');
+‏                closeAdminPanel();
+‏                closeProfileModal();
+‏                checkAuthUI();
+‏                renderAppContent();
             }
         }
 
-        function renderAppContent() {
-            const area = document.getElementById('mainContentArea');
-            area.innerHTML = '';
+‏        function checkAuthUI() {
+‏            const authNavBtns = document.getElementById('authNavButtons');
+‏            const profileBtn = document.getElementById('profileTriggerBtn');
+‏            const adminBtn = document.getElementById('adminNavBtn');
+‏            const suggestionUserBtn = document.getElementById('suggestionUserBtn');
 
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
-            let contents = JSON.parse(localStorage.getItem('esultan_contents')) || [];
+‏            if (currentUser) {
+‏                authNavBtns.classList.add('hidden');
+‏                profileBtn.classList.remove('hidden');
+‏                document.getElementById('headerUserAvatar').src = currentUser.avatar || 'https://via.placeholder.com/100/333/fff?text=U';
+‏                document.getElementById('headerUserEmailName').innerText = currentUser.email.split('@')[0];
 
-            if(sections.length === 0 || !activeSectionId) {
-                area.innerHTML = '<p style="text-align:center; color:var(--gray); padding:30px;">لا توجد أقسام حالياً.</p>';
-                return;
+‏                if (currentUser.role === 'admin') {
+‏                    adminBtn.classList.remove('hidden');
+‏                    suggestionUserBtn.classList.add('hidden');
+‏                } else {
+‏                    adminBtn.classList.add('hidden');
+‏                    suggestionUserBtn.classList.remove('hidden');
+                }
+‏            } else {
+‏                authNavBtns.classList.remove('hidden');
+‏                profileBtn.classList.add('hidden');
+‏                adminBtn.classList.add('hidden');
+‏                suggestionUserBtn.classList.add('hidden');
             }
+        }
 
-            const currentSec = sections.find(s => s.id === activeSectionId);
-            if(!currentSec) {
-                activeSectionId = sections[0].id;
-                renderAppContent();
-                return;
+        // الملف الشخصي وإدارة الحسابات
+‏        function openProfileModal() {
+‏            if (!currentUser) return showAuth('login');
+‏            document.getElementById('profileModalOverlay').classList.remove('hidden');
+‏            document.getElementById('profileModalEmailText').innerText = currentUser.email;
+‏            document.getElementById('profileModalAvatarImg').src = currentUser.avatar || 'https://via.placeholder.com/100/333/fff?text=U';
+‏            renderSavedAccountsList();
+        }
+
+‏        function closeProfileModal() {
+‏            document.getElementById('profileModalOverlay').classList.add('hidden');
+‏            document.getElementById('addAnotherAccountContainer').classList.add('hidden');
+        }
+
+        // فتح وإغلاق صفحة التنزيلات الكاملة مع تبويبي الفيديوهات والصور
+‏        function openDownloadsPage() {
+‏            closeProfileModal();
+‏            document.getElementById('downloadsPage').style.display = 'block';
+‏            renderDownloadsContent();
+        }
+
+‏        function closeDownloadsPage() {
+‏            document.getElementById('downloadsPage').style.display = 'none';
+        }
+
+‏        function switchDownloadsTab(tabName, btnElement) {
+‏            const videosTab = document.getElementById('videosDownloadsTab');
+‏            const imagesTab = document.getElementById('imagesDownloadsTab');
+‏            const buttons = document.querySelectorAll('#downloadsPage .tab-btn');
+
+‏            buttons.forEach(btn => btn.classList.remove('active'));
+‏            btnElement.classList.add('active');
+
+‏            if (tabName === 'videos') {
+‏                videosTab.classList.remove('hidden');
+‏                imagesTab.classList.add('hidden');
+‏            } else {
+‏                videosTab.classList.add('hidden');
+‏                imagesTab.classList.remove('hidden');
             }
+        }
 
-            const secDiv = document.createElement('div');
-            secDiv.className = 'auth-box';
+‏        async function renderDownloadsContent() {
+‏            const videosGrid = document.getElementById('videosDownloadsGrid');
+‏            const imagesGrid = document.getElementById('imagesDownloadsGrid');
+‏            videosGrid.innerHTML = '';
+‏            imagesGrid.innerHTML = '';
 
-            let headerHTML = `<div class="section-header">
-                <h2>${currentSec.name} ${currentSec.locked && !unlockedSections.has(currentSec.id) ? '<span class="locked-badge">مغلق بكلمة مرور</span>' : ''}</h2>
-            </div>`;
-            secDiv.innerHTML = headerHTML;
+‏            let downloads = JSON.parse(localStorage.getItem('esultan_downloads_history')) || [];
+‏            let allContents = await getAllContentsFromDB();
 
-            if (currentSec.locked && !unlockedSections.has(currentSec.id)) {
-                secDiv.innerHTML += `
-                    <div style="text-align: center; padding: 30px;">
-                        <p style="margin-bottom: 15px; color: var(--gray);">هذا القسم محمي بكلمة مرور خاصة. يرجى إدخال كلمة المرور للمتابعة:</p>
-                        <input type="password" id="pass_${currentSec.id}" placeholder="أدخل كلمة المرور الخاصة بالقسم" style="max-width: 300px; display: inline-block; margin-left: 10px;">
-                        <button class="action-btn" style="max-width: 150px; display: inline-block;" onclick="verifySectionPassword('${currentSec.id}')">فتح القسم</button>
-                    </div>
-                `;
-            } else {
-                // فلترة الأقسام الفرعية التابعة لهذا القسم الرئيسي
-                const currentSubSections = subSections.filter(sub => sub.parentSectionId === currentSec.id);
+‏            let videoItems = [];
+‏            let imageItems = [];
 
-                if (currentSubSections.length > 0) {
-                    if (!activeSubSectionId || !currentSubSections.some(sub => sub.id === activeSubSectionId)) {
-                        activeSubSectionId = currentSubSections[0].id;
+‏            downloads.forEach(d => {
+‏                let found = allContents.find(c => c.id === d.id);
+‏                if (found) {
+‏                    if (found.type === 'localvideo' || found.type === 'youtube') {
+‏                        videoItems.push(found);
+‏                    } else if (found.type === 'image' || found.thumbBlob) {
+‏                        imageItems.push(found);
                     }
-
-                    // شريط الأقسام الفرعية الأفقي
-                    const subBar = document.createElement('div');
-                    subBar.className = 'sub-categories-bar';
-                    currentSubSections.forEach(sub => {
-                        const tab = document.createElement('div');
-                        tab.className = `sub-category-tab ${sub.id === activeSubSectionId ? 'active' : ''}`;
-                        tab.innerText = sub.name;
-                        tab.onclick = function() {
-                            activeSubSectionId = sub.id;
-                            currentSearchQuery = '';
-                            renderAppContent();
-                        };
-                        subBar.appendChild(tab);
-                    });
-                    secDiv.appendChild(subBar);
-                } else {
-                    activeSubSectionId = null;
                 }
+            });
 
-                // شريط البحث الخاص بالقسم الحالي
-                const searchContainer = document.createElement('div');
-                searchContainer.className = 'search-bar-container';
-                searchContainer.innerHTML = `
-                    <input type="text" id="searchInput" placeholder="ابحث داخل هذا القسم..." value="${currentSearchQuery}" oninput="handleSearchInput(this.value)">
-                `;
-                secDiv.appendChild(searchContainer);
-
-                // فلترة المحتوى حسب القسم الرئيسي، القسم الفرعي، ونص البحث
-                let secContents = contents.filter(c => c.sectionId === currentSec.id);
-                if (activeSubSectionId) {
-                    secContents = secContents.filter(c => c.subSectionId === activeSubSectionId);
-                }
-
-                if (currentSearchQuery.trim() !== '') {
-                    const q = currentSearchQuery.toLowerCase();
-                    secContents = secContents.filter(c => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q));
-                }
-
-                if(secContents.length === 0) {
-                    secDiv.innerHTML += `<p style="color:var(--gray); margin-top: 15px;">لا يوجد محتوى مطابق في هذا القسم.</p>`;
-                } else {
-                    const gridDiv = document.createElement('div');
-                    gridDiv.className = 'grid';
-
-                    secContents.forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <img src="${item.image}" alt="${item.title}">
-                            <video controls src="${item.video}"></video>
-                            <div class="card-body">
-                                <div class="card-title">${item.title}</div>
-                                <div class="card-desc">${item.desc}</div>
-                                ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteContent(${item.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; margin-top:10px; width:100%;">حذف المحتوى</button>` : ''}
-                            </div>
-                        `;
-                        gridDiv.appendChild(card);
-                    });
-                    secDiv.appendChild(gridDiv);
-                }
+‏            if (videoItems.length === 0) {
+‏                videosGrid.innerHTML = '<p style="color:var(--gray); padding:20px;">لا توجد فيديوهات منزلة حالياً.</p>';
+‏            } else {
+‏                videoItems.forEach(item => {
+‏                    videosGrid.appendChild(createDownloadCard(item));
+                });
             }
 
-            area.appendChild(secDiv);
+‏            if (imageItems.length === 0) {
+‏                imagesGrid.innerHTML = '<p style="color:var(--gray); padding:20px;">لا توجد صور منزلة حالياً.</p>';
+‏            } else {
+‏                imageItems.forEach(item => {
+‏                    imagesGrid.appendChild(createDownloadCard(item));
+                });
+            }
         }
 
-        function handleSearchInput(val) {
-            currentSearchQuery = val;
-            // إعادة عرض المحتوى بسلاسة مع الحفاظ على التركيز في خانة البحث
-            const currentSubId = activeSubSectionId;
-            const currentActiveSec = activeSectionId;
-            renderAppContent();
+‏        function createDownloadCard(item) {
+‏            let card = document.createElement('div');
+‏            card.className = 'card';
+‏            card.onclick = () => openContentModal(item.id);
+
+‏            let previewHTML = '';
+‏            if (item.thumbBlob) {
+‏                previewHTML = `<img src="${URL.createObjectURL(item.thumbBlob)}">`;
+‏            } else if (item.mediaBlob) {
+‏                previewHTML = item.type === 'localvideo' ? `<video src="${URL.createObjectURL(item.mediaBlob)}"></video>` : `<img src="${URL.createObjectURL(item.mediaBlob)}">`;
+‏            } else {
+‏                previewHTML = `<div style="background:#333; height:100%; display:flex; align-items:center; justify-content:center; color:#fff;">معاينة</div>`;
+            }
+
+‏            card.innerHTML = `
+‏                <div class="thumbnail-container">${previewHTML}</div>
+‏                <div class="card-body">
+‏                    <div class="card-title">${item.title}</div>
+‏                    <div class="card-desc">${item.desc || ''}</div>
+‏                    <button onclick="removeDownloadItem(${item.id}, event)" style="background: #d9534f; color: white; border: none; padding: 6px; border-radius: 4px; margin-top: 10px; cursor: pointer; font-size: 12px;">إزالة من التنزيلات</button>
+‏                </div>
+            `;
+‏            return card;
+        }
+
+‏        function removeDownloadItem(id, event) {
+‏            event.stopPropagation();
+‏            let downloads = JSON.parse(localStorage.getItem('esultan_downloads_history')) || [];
+‏            downloads = downloads.filter(d => d.id !== id);
+‏            localStorage.setItem('esultan_downloads_history', JSON.stringify(downloads));
+‏            renderDownloadsContent();
+        }
+
+‏        function recordDownloadHistory(item) {
+‏            let downloads = JSON.parse(localStorage.getItem('esultan_downloads_history')) || [];
+‏            if (!downloads.some(d => d.id === item.id)) {
+‏                downloads.unshift({ id: item.id, date: new Date().toLocaleDateString() });
+‏                localStorage.setItem('esultan_downloads_history', JSON.stringify(downloads));
+            }
+        }
+
+        // --- نظام تعديل صورة الملف الشخصي المماثل للواتساب (قص وتحريك وتكبير) ---
+‏        let cropState = {
+‏            scale: 1,
+‏            startX: 0,
+‏            startY: 0,
+‏            translateX: 0,
+‏            translateY: 0,
+‏            isDragging: false,
+‏            selectedFile: null
+        };
+
+‏        const imgToCrop = document.getElementById('imageToCrop');
+‏        const cropArea = document.getElementById('imageCropArea');
+
+‏        function triggerImageCrop(input) {
+‏            if (input.files && input.files[0]) {
+‏                cropState.selectedFile = input.files[0];
+‏                const reader = new FileReader();
+‏                reader.onload = function(e) {
+‏                    imgToCrop.src = e.target.result;
+‏                    document.getElementById('cropModal').style.display = 'flex';
+‏                    cropState.scale = 1;
+‏                    cropState.translateX = 0;
+‏                    cropState.translateY = 0;
+‏                    document.getElementById('zoomRange').value = 1;
+‏                    updateCropTransform();
+                };
+‏                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+‏        function closeCropModal() {
+‏            document.getElementById('cropModal').style.display = 'none';
+        }
+
+‏        function adjustZoom(val) {
+‏            cropState.scale = parseFloat(val);
+‏            updateCropTransform();
+        }
+
+‏        function updateCropTransform() {
+‏            imgToCrop.style.transform = `translate(${cropState.translateX}px, ${cropState.translateY}px) scale(${cropState.scale})`;
+        }
+
+        // أحداث السحب والإفلات للتحريك داخل الدائرة
+‏        imgToCrop.onmousedown = startDrag;
+‏        imgToCrop.ontouchstart = startDrag;
+
+‏        window.onmousemove = dragMove;
+‏        window.ontouchmove = dragMove;
+
+‏        window.onmouseup = endDrag;
+‏        window.ontouchend = endDrag;
+
+‏        function startDrag(e) {
+‏            cropState.isDragging = true;
+‏            let clientX = e.clientX || e.touches[0].clientX;
+‏            let clientY = e.clientY || e.touches[0].clientY;
+‏            cropState.startX = clientX - cropState.translateX;
+‏            cropState.startY = clientY - cropState.translateY;
+‏            e.preventDefault();
+        }
+
+‏        function dragMove(e) {
+‏            if (!cropState.isDragging) return;
+‏            let clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+‏            let clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
             
-            // إعادة التركيز على خانة البحث واستعادة مؤشر الكتابة في نهايتها
-            setTimeout(() => {
-                const input = document.getElementById('searchInput');
-                if (input) {
-                    input.focus();
-                    input.setSelectionRange(input.value.length, input.value.length);
-                }
-            }, 0);
+‏            cropState.translateX = clientX - cropState.startX;
+‏            cropState.translateY = clientY - cropState.startY;
+‏            updateCropTransform();
         }
 
-        function verifySectionPassword(secId) {
-            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
-            const sec = sections.find(s => s.id === secId);
-            const inputPass = document.getElementById(`pass_${secId}`).value.trim();
+‏        function endDrag() {
+‏            cropState.isDragging = false;
+        }
 
-            if (sec && inputPass === sec.password) {
-                unlockedSections.add(secId);
-                alert('تم فتح القسم بنجاح!');
-                renderCategoriesBar();
-                renderAppContent();
-            } else {
-                alert('كلمة مرور القسم غير صحيحة!');
+‏        function saveCroppedImage() {
+‏            const canvas = document.createElement('canvas');
+‏            canvas.width = 300;
+‏            canvas.height = 300;
+‏            const ctx = canvas.getContext('2d');
+
+‏            let img = new Image();
+‏            img.src = imgToCrop.src;
+‏            img.onload = function() {
+‏                ctx.clearRect(0, 0, 300, 300);
+‏                ctx.save();
+‏                ctx.beginPath();
+‏                ctx.arc(150, 150, 150, 0, Math.PI * 2, true);
+‏                ctx.closePath();
+‏                ctx.clip();
+
+‏                ctx.translate(150 + cropState.translateX, 150 + cropState.translateY);
+‏                ctx.scale(cropState.scale, cropState.scale);
+‏                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+‏                ctx.restore();
+
+‏                let croppedBase64 = canvas.toDataURL('image/jpeg');
+                
+‏                currentUser.avatar = croppedBase64;
+‏                localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+
+‏                let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
+‏                let idx = accounts.findIndex(acc => acc.email === currentUser.email);
+‏                if (idx !== -1) {
+‏                    accounts[idx].avatar = croppedBase64;
+‏                    localStorage.setItem('esultan_saved_accounts', JSON.stringify(accounts));
+                }
+
+‏                document.getElementById('profileModalAvatarImg').src = croppedBase64;
+‏                document.getElementById('headerUserAvatar').src = croppedBase64;
+‏                closeCropModal();
+‏                alert('تم حفظ وتعديل صورة الملف الشخصي بنجاح!');
+            };
+        }
+
+‏        function showAddAnotherAccountBox() {
+‏            let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
+‏            if (accounts.length >= 5) {
+‏                return alert('وصلت للحد الأقصى (5 حسابات). لا يمكن إضافة حسابات أخرى.');
+            }
+‏            document.getElementById('addAnotherAccountContainer').classList.toggle('hidden');
+        }
+
+‏        function renderSavedAccountsList() {
+‏            const container = document.getElementById('savedAccountsListContainer');
+‏            let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
+‏            container.innerHTML = accounts.length === 0 ? '<p style="color:var(--gray)">لا توجد حسابات أخرى محفوظة</p>' : '';
+
+‏            accounts.forEach((acc) => {
+‏                let isCurrent = currentUser && currentUser.email === acc.email;
+‏                container.innerHTML += `
+‏                    <div class="account-switcher-item ${isCurrent ? 'active-account' : ''}">
+‏                        <div style="display: flex; align-items: center; gap: 10px;">
+‏                            <img src="${acc.avatar || 'https://via.placeholder.com/40/333/fff?text=U'}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+‏                            <div>
+‏                                <div style="font-weight: bold; font-size: 14px;">${acc.email}</div>
+‏                                <div style="font-size: 11px; color: var(--gray);">${isCurrent ? 'الحساب النشط حالياً' : 'حساب محفوظ'}</div>
+‏                            </div>
+‏                        </div>
+‏                        <div>
+‏                            ${!isCurrent ? `<button class="action-btn" style="padding: 4px 10px; font-size: 12px; width: auto;" onclick="switchAccount('${acc.email}')">تبديل</button>` : ''}
+‏                            <button onclick="removeSavedAccount('${acc.email}')" style="background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-right: 5px;">حذف</button>
+‏                        </div>
+‏                    </div>
+                `;
+            });
+        }
+
+‏        function switchAccount(email) {
+‏            let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
+‏            let targetAcc = accounts.find(acc => acc.email === email);
+‏            if (targetAcc) {
+‏                currentUser = targetAcc;
+‏                localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+‏                checkAuthUI();
+‏                renderAppContent();
+‏                openProfileModal();
             }
         }
-    </script>
-</body>
-</html>
+
+‏        function removeSavedAccount(email) {
+‏            let accounts = JSON.parse(localStorage.getItem('esultan_saved_accounts')) || [];
+‏            accounts = accounts.filter(acc => acc.email !== email);
+‏            localStorage.setItem('esultan_saved_accounts', JSON.stringify(accounts));
+‏            if (currentUser && currentUser.email === email) {
+‏                currentUser = accounts.length > 0 ? accounts[0] : null;
+‏                if (currentUser) {
+‏                    localStorage.setItem('esultan_current_user', JSON.stringify(currentUser));
+‏                } else {
+‏                    localStorage.removeItem('esultan_current_user');
+                }
+‏                checkAuthUI();
+‏                renderAppContent();
+            }
+‏            renderSavedAccountsList();
+        }
+
+‏        function changeSiteLanguage(lang) {
+‏            localStorage.setItem('esultan_site_lang', lang);
+‏            document.documentElement.lang = lang;
+‏            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+‏            alert('تم تغيير لغة الموقع بنجاح');
+        }
+
+‏        function loadSavedLanguage() {
+‏            let lang = localStorage.getItem('esultan_site_lang') || 'ar';
+‏            document.getElementById('siteLanguageSelect').value = lang;
+‏            document.documentElement.lang = lang;
+‏            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        }
+
+‏        function openAdminPanel() {
+‏            document.getElementById('adminOverlay').classList.remove('hidden');
+‏            backToAdminMenu();
+‏            populateSectionSelects();
+‏            renderAdminSuggestions();
+‏            renderAdminSectionsList();
+‏            renderAdminSubSectionsList();
+‏            populateBoostVideoSelect();
+        }
+
+‏        function closeAdminPanel() {
+‏            document.getElementById('adminOverlay').classList.add('hidden');
+        }
+
+‏        function openAdminSection(sectionName) {
+‏            ['subSectionSectionsManager', 'subSectionBoostStats', 'subSectionTheme', 'subSectionSiteName', 'subSectionSuggestions', 'subSectionContent', 'adminMenuButtons'].forEach(id => {
+‏                document.getElementById(id).classList.add('hidden');
+            });
+
+‏            if(sectionName === 'sectionsManager') document.getElementById('subSectionSectionsManager').classList.remove('hidden');
+‏            else if(sectionName === 'boostStats') document.getElementById('subSectionBoostStats').classList.remove('hidden');
+‏            else if(sectionName === 'content') {
+‏                document.getElementById('subSectionContent').classList.remove('hidden');
+‏                populateSectionSelects();
+‏                toggleContentTypeFields();
+            }
+‏            else if(sectionName === 'theme') document.getElementById('subSectionTheme').classList.remove('hidden');
+‏            else if(sectionName === 'sitename') document.getElementById('subSectionSiteName').classList.remove('hidden');
+‏            else if(sectionName === 'suggestions') document.getElementById('subSectionSuggestions').classList.remove('hidden');
+        }
+
+‏        function backToAdminMenu() {
+‏            ['subSectionSectionsManager', 'subSectionBoostStats', 'subSectionTheme', 'subSectionSiteName', 'subSectionSuggestions', 'subSectionContent'].forEach(id => {
+‏                document.getElementById(id).classList.add('hidden');
+            });
+‏            document.getElementById('adminMenuButtons').classList.remove('hidden');
+        }
+
+‏        function toggleContentTypeFields() {
+‏            const type = document.getElementById('contentTypeSelect').value;
+‏            document.getElementById('youtubeFieldsContainer').classList.toggle('hidden', type !== 'youtube');
+‏            document.getElementById('localVideoFieldsContainer').classList.toggle('hidden', type !== 'localvideo');
+‏            document.getElementById('imageFieldsContainer').classList.toggle('hidden', type !== 'image');
+‏            document.getElementById('articleFieldsContainer').classList.toggle('hidden', type !== 'article');
+        }
+
+‏        function previewFileLabel(input, textId) {
+‏            if (input.files && input.files[0]) {
+‏                document.getElementById(textId).innerText = 'تم اختيار الملف: ' + input.files[0].name;
+            }
+        }
+
+‏        async function publishContentIndexedDB() {
+‏            const type = document.getElementById('contentTypeSelect').value;
+‏            const sectionId = document.getElementById('contentSectionSelect').value;
+‏            const subContainer = document.getElementById('subSectionPublishContainer');
+‏            const subSectionId = !subContainer.classList.contains('hidden') ? document.getElementById('contentSubSectionSelect').value : null;
+‏            const title = document.getElementById('contentTitle').value.trim();
+‏            const desc = document.getElementById('contentDesc').value.trim();
+
+‏            if (!sectionId || !title) return alert('الرجاء كتابة العنوان وتحديد القسم');
+
+‏            let itemData = {
+‏                id: Date.now(),
+‏                type: type,
+‏                sectionId: sectionId,
+‏                subSectionId: subSectionId,
+‏                title: title,
+‏                desc: desc,
+‏                views: 0,
+‏                likes: 0,
+‏                createdAt: new Date()
+            };
+
+‏            if (type === 'youtube') {
+‏                itemData.youtubeUrl = document.getElementById('contentYoutubeUrl').value.trim();
+‏                const file = document.getElementById('thumbFile').files[0];
+‏                if (file) itemData.thumbBlob = file;
+‏            } else if (type === 'localvideo') {
+‏                const file = document.getElementById('localVideoFile').files[0];
+‏                if (!file) return alert('اختر ملف الفيديو!');
+‏                itemData.mediaBlob = file;
+‏            } else if (type === 'image') {
+‏                const file = document.getElementById('localImageFile').files[0];
+‏                if (!file) return alert('اختر الصورة!');
+‏                itemData.mediaBlob = file;
+‏            } else if (type === 'article') {
+‏                itemData.articleBody = document.getElementById('contentArticleBody').value.trim();
+‏                if (!itemData.articleBody) return alert('اكتب نص المقال');
+            }
+
+‏            const transaction = db.transaction(storeName, "readwrite");
+‏            const store = transaction.objectStore(storeName);
+‏            store.put(itemData);
+
+‏            transaction.oncomplete = () => {
+‏                alert('تم نشر المحتوى بنجاح وبدون مشاكل مساحة!');
+‏                document.getElementById('contentTitle').value = '';
+‏                document.getElementById('contentDesc').value = '';
+‏                document.getElementById('contentYoutubeUrl').value = '';
+‏                document.getElementById('contentArticleBody').value = '';
+‏                renderAppContent();
+            };
+‏            transaction.onerror = (e) => {
+‏                alert('حدث خطأ أثناء الحفظ في قاعدة البيانات: ' + e.target.error);
+            };
+        }
+
+‏        function getAllContentsFromDB() {
+‏            return new Promise((resolve, reject) => {
+‏                if (!db) return resolve([]);
+‏                const transaction = db.transaction(storeName, "readonly");
+‏                const store = transaction.objectStore(storeName);
+‏                const request = store.getAll();
+‏                request.onsuccess = () => resolve(request.result || []);
+‏                request.onerror = () => reject(request.error);
+            });
+        }
+
+‏        async function deleteContent(id, event) {
+‏            event.stopPropagation();
+‏            if (confirm('هل تريد حذف هذا المحتوى نهائياً؟')) {
+‏                const transaction = db.transaction(storeName, "readwrite");
+‏                const store = transaction.objectStore(storeName);
+‏                store.delete(Number(id));
+‏                transaction.oncomplete = () => {
+‏                    renderAppContent();
+                };
+            }
+        }
+
+‏        function renderAdminSectionsList() {
+‏            const list = document.getElementById('adminSectionsList');
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            list.innerHTML = sections.length === 0 ? '<p style="color:var(--gray)">لا توجد أقسام</p>' : '';
+‏            sections.forEach(sec => {
+‏                list.innerHTML += `<div class="section-manage-item"><span>${sec.name}</span> <button onclick="deleteSection('${sec.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">حذف</button></div>`;
+            });
+        }
+
+‏        function saveSectionData() {
+‏            const name = document.getElementById('manageSectionNameInput').value.trim();
+‏            const password = document.getElementById('manageSectionPassInput').value.trim();
+‏            if (!name) return alert('أدخل اسم القسم');
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            sections.push({ id: 'sec_' + Date.now(), name, locked: password !== '', password });
+‏            localStorage.setItem('esultan_sections', JSON.stringify(sections));
+‏            document.getElementById('manageSectionNameInput').value = '';
+‏            document.getElementById('manageSectionPassInput').value = '';
+‏            renderAdminSectionsList();
+‏            renderCategoriesBar();
+‏            populateSectionSelects();
+        }
+
+‏        function deleteSection(id) {
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            if (sections.length <= 1) return alert('لا يمكن حذف كل الأقسام');
+‏            localStorage.setItem('esultan_sections', JSON.stringify(sections.filter(s => s.id !== id)));
+‏            renderAdminSectionsList();
+‏            renderCategoriesBar();
+‏            renderAppContent();
+        }
+
+‏        function renderAdminSubSectionsList() {
+‏            const list = document.getElementById('adminSubSectionsList');
+‏            let subs = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+‏            list.innerHTML = subs.length === 0 ? '<p style="color:var(--gray)">لا توجد أقسام فرعية</p>' : '';
+‏            subs.forEach(sub => {
+‏                list.innerHTML += `<div class="section-manage-item"><span>${sub.name}</span> <button onclick="deleteSubSection('${sub.id}')" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">حذف</button></div>`;
+            });
+        }
+
+‏        function saveSubSectionData() {
+‏            const parentId = document.getElementById('parentSectionSelectForSub').value;
+‏            const name = document.getElementById('manageSubSectionNameInput').value.trim();
+‏            if (!name) return alert('أدخل اسم القسم الفرعي');
+‏            let subs = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+‏            subs.push({ id: 'sub_' + Date.now(), parentSectionId: parentId, name });
+‏            localStorage.setItem('esultan_sub_sections', JSON.stringify(subs));
+‏            document.getElementById('manageSubSectionNameInput').value = '';
+‏            renderAdminSubSectionsList();
+‏            renderAppContent();
+        }
+
+‏        function deleteSubSection(id) {
+‏            let subs = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+‏            localStorage.setItem('esultan_sub_sections', JSON.stringify(subs.filter(s => s.id !== id)));
+‏            renderAdminSubSectionsList();
+‏            renderAppContent();
+        }
+
+‏        async function populateBoostVideoSelect() {
+‏            let select = document.getElementById('boostVideoSelect');
+‏            select.innerHTML = '';
+‏            let contents = await getAllContentsFromDB();
+‏            contents.forEach(item => {
+‏                select.innerHTML += `<option value="${item.id}">${item.title}</option>`;
+            });
+‏            loadVideoStatsToForm();
+        }
+
+‏        async function loadVideoStatsToForm() {
+‏            let id = document.getElementById('boostVideoSelect').value;
+‏            let contents = await getAllContentsFromDB();
+‏            let item = contents.find(c => c.id == id);
+‏            if (item) {
+‏                document.getElementById('boostViewsInput').value = item.views || 0;
+‏                document.getElementById('boostLikesInput').value = item.likes || 0;
+            }
+        }
+
+‏        async function saveBoostStats() {
+‏            let id = document.getElementById('boostVideoSelect').value;
+‏            let views = parseInt(document.getElementById('boostViewsInput').value) || 0;
+‏            let likes = parseInt(document.getElementById('boostLikesInput').value) || 0;
+‏            let contents = await getAllContentsFromDB();
+‏            let item = contents.find(c => c.id == id);
+‏            if (item) {
+‏                item.views = views;
+‏                item.likes = likes;
+‏                const tx = db.transaction(storeName, "readwrite");
+‏                tx.objectStore(storeName).put(item);
+‏                tx.oncomplete = () => {
+‏                    alert('تم التحديث بنجاح');
+‏                    renderAppContent();
+                };
+            }
+        }
+
+‏        function showSuggestionModal() {
+‏            document.getElementById('suggestionBoxContainer').classList.toggle('hidden');
+        }
+
+‏        function submitSuggestion() {
+‏            const text = document.getElementById('userSuggestionInput').value.trim();
+‏            if (!text) return alert('اكتب اقتراحك');
+‏            let suggs = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+‏            suggs.push({ id: Date.now(), user: currentUser.email, text, date: new Date().toLocaleDateString() });
+‏            localStorage.setItem('esultan_suggestions', JSON.stringify(suggs));
+‏            alert('تم الإرسال بنجاح');
+‏            document.getElementById('userSuggestionInput').value = '';
+‏            document.getElementById('suggestionBoxContainer').classList.add('hidden');
+        }
+
+‏        function renderAdminSuggestions() {
+‏            const list = document.getElementById('adminSuggestionsList');
+‏            let suggs = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+‏            list.innerHTML = suggs.length === 0 ? '<p style="color:var(--gray)">لا توجد اقتراحات</p>' : '';
+‏            suggs.forEach(s => {
+‏                list.innerHTML += `<div class="suggestion-item"><div><span style="color:var(--primary);">${s.user}:</span> ${s.text}</div> <button onclick="deleteSuggestion(${s.id})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">حذف</button></div>`;
+            });
+        }
+
+‏        function deleteSuggestion(id) {
+‏            let suggs = JSON.parse(localStorage.getItem('esultan_suggestions')) || [];
+‏            localStorage.setItem('esultan_suggestions', JSON.stringify(suggs.filter(s => s.id !== id)));
+‏            renderAdminSuggestions();
+        }
+
+‏        function updateSiteTheme() {
+‏            localStorage.setItem('esultan_primary', document.getElementById('primaryColorPicker').value);
+‏            localStorage.setItem('esultan_bg', document.getElementById('bgColorPicker').value);
+‏            applySavedStyles();
+‏            alert('تم تطبيق الألوان');
+        }
+
+‏        function applySavedStyles() {
+‏            if (localStorage.getItem('esultan_primary')) document.documentElement.style.setProperty('--primary', localStorage.getItem('esultan_primary'));
+‏            if (localStorage.getItem('esultan_bg')) document.documentElement.style.setProperty('--bg', localStorage.getItem('esultan_bg'));
+        }
+
+‏        function updateSiteName() {
+‏            const name = document.getElementById('newSiteNameInput').value.trim();
+‏            if (!name) return;
+‏            localStorage.setItem('esultan_site_name', name);
+‏            loadSiteName();
+‏            alert('تم تحديث الاسم');
+        }
+
+‏        function loadSiteName() {
+‏            if (localStorage.getItem('esultan_site_name')) {
+‏                document.getElementById('siteLogoText').innerText = localStorage.getItem('esultan_site_name');
+‏                document.getElementById('pageTitle').innerText = localStorage.getItem('esultan_site_name');
+            }
+        }
+
+‏        function populateSectionSelects() {
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            ['parentSectionSelectForSub', 'contentSectionSelect'].forEach(id => {
+‏                let sel = document.getElementById(id);
+‏                sel.innerHTML = '';
+‏                sections.forEach(s => sel.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+            });
+‏            populateSubSectionSelectForPublish();
+        }
+
+‏        function populateSubSectionSelectForPublish() {
+‏            const parentId = document.getElementById('contentSectionSelect').value;
+‏            const subContainer = document.getElementById('subSectionPublishContainer');
+‏            let subSelect = document.getElementById('contentSubSectionSelect');
+‏            subSelect.innerHTML = '';
+‏            let subs = (JSON.parse(localStorage.getItem('esultan_sub_sections')) || []).filter(sub => sub.parentSectionId === parentId);
+‏            if (subs.length > 0) {
+‏                subContainer.classList.remove('hidden');
+‏                subs.forEach(s => subSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+‏            } else {
+‏                subContainer.classList.add('hidden');
+            }
+        }
+
+‏        function getYoutubeEmbedUrl(url) {
+‏            let match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+‏            return (match && match[2].length === 11) ? 'https://www.youtube.com/embed/' + match[2] + '?autoplay=1' : null;
+        }
+
+‏        function downloadItemMedia(id, event) {
+‏            event.stopPropagation();
+‏            getAllContentsFromDB().then(contents => {
+‏                let item = contents.find(c => c.id == id);
+‏                if (!item) return;
+
+‏                recordDownloadHistory(item);
+
+‏                if (item.mediaBlob) {
+‏                    let url = URL.createObjectURL(item.mediaBlob);
+‏                    let a = document.createElement('a');
+‏                    a.href = url;
+‏                    a.download = item.title || 'download';
+‏                    document.body.appendChild(a);
+‏                    a.click();
+‏                    document.body.removeChild(a);
+‏                } else if (item.thumbBlob) {
+‏                    let url = URL.createObjectURL(item.thumbBlob);
+‏                    let a = document.createElement('a');
+‏                    a.href = url;
+‏                    a.download = (item.title || 'image') + '.jpg';
+‏                    document.body.appendChild(a);
+‏                    a.click();
+‏                    document.body.removeChild(a);
+‏                } else {
+‏                    alert('تم حفظ المحتوى في صفحة التنزيلات في ملفك الشخصي.');
+                }
+            });
+        }
+
+‏        async function openContentModal(id) {
+‏            let contents = await getAllContentsFromDB();
+‏            let item = contents.find(c => c.id == id);
+‏            if (!item) return;
+
+‏            item.views = (item.views || 0) + 1;
+‏            const tx = db.transaction(storeName, "readwrite");
+‏            tx.objectStore(storeName).put(item);
+
+‏            document.getElementById('modalVideoTitle').innerText = item.title;
+‏            const modalBody = document.getElementById('modalBodyContent');
+
+‏            let downloadBtnHTML = `<button onclick="downloadItemMedia(${item.id}, event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold; margin-top:15px;">📥 تنزيل الملف / الفيديو</button>`;
+
+‏            if (item.type === 'youtube') {
+‏                modalBody.innerHTML = `<div class="video-responsive-wrapper"><iframe src="${getYoutubeEmbedUrl(item.youtubeUrl)}" allowfullscreen></iframe></div><div style="padding:15px; text-align:center;">${downloadBtnHTML}</div>`;
+‏            } else if (item.type === 'localvideo') {
+‏                let videoUrl = URL.createObjectURL(item.mediaBlob);
+‏                modalBody.innerHTML = `<div class="video-responsive-wrapper"><video controls autoplay src="${videoUrl}"></video></div><div style="padding:15px; text-align:center;">${downloadBtnHTML}</div>`;
+‏            } else if (item.type === 'image') {
+‏                let imgUrl = URL.createObjectURL(item.mediaBlob);
+‏                modalBody.innerHTML = `<div style="text-align:center; padding:20px;"><img src="${imgUrl}" style="max-width:100%; max-height:60vh;"><div>${downloadBtnHTML}</div></div>`;
+‏            } else if (item.type === 'article') {
+‏                modalBody.innerHTML = `<div style="padding:30px; line-height:1.8; white-space:pre-wrap;">${item.articleBody}</div>`;
+            }
+
+‏            document.getElementById('videoModalOverlay').classList.remove('hidden');
+‏            renderAppContent();
+        }
+
+‏        function closeVideoPlayer() {
+‏            document.getElementById('videoModalOverlay').classList.add('hidden');
+‏            document.getElementById('modalBodyContent').innerHTML = '';
+        }
+
+‏        async function handleLike(id, event) {
+‏            event.stopPropagation();
+‏            let contents = await getAllContentsFromDB();
+‏            let item = contents.find(c => c.id == id);
+‏            if (!item) return;
+
+‏            let likeStorageKey = `esultan_liked_item_${id}`;
+‏            let hasLiked = localStorage.getItem(likeStorageKey) === 'true';
+
+‏            if (!hasLiked) {
+‏                item.likes = (item.likes || 0) + 1;
+‏                localStorage.setItem(likeStorageKey, 'true');
+‏            } else {
+‏                item.likes = Math.max(0, (item.likes || 0) - 1);
+‏                localStorage.setItem(likeStorageKey, 'false');
+            }
+
+‏            const tx = db.transaction(storeName, "readwrite");
+‏            tx.objectStore(storeName).put(item);
+‏            tx.oncomplete = () => renderAppContent();
+        }
+
+‏        async function renderAppContent() {
+‏            const area = document.getElementById('mainContentArea');
+‏            area.innerHTML = '';
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            let subSections = JSON.parse(localStorage.getItem('esultan_sub_sections')) || [];
+‏            let contents = await getAllContentsFromDB();
+
+‏            if (sections.length === 0 || !activeSectionId) return;
+‏            const currentSec = sections.find(s => s.id === activeSectionId) || sections[0];
+
+‏            let secDiv = document.createElement('div');
+‏            secDiv.className = 'auth-box';
+‏            secDiv.innerHTML = `<div class="section-header"><h2>${currentSec.name} ${currentSec.locked && !unlockedSections.has(currentSec.id) ? '<span class="locked-badge">مغلق</span>' : ''}</h2></div>`;
+
+‏            if (currentSec.locked && !unlockedSections.has(currentSec.id)) {
+‏                secDiv.innerHTML += `<div style="text-align:center; padding:20px;"><input type="password" id="pass_${currentSec.id}" placeholder="كلمة المرور" style="max-width:250px; display:inline-block; margin-left:10px;"><button class="action-btn" style="max-width:120px; display:inline-block;" onclick="verifySec('${currentSec.id}')">فتح</button></div>`;
+‏            } else {
+‏                let currentSubs = subSections.filter(sub => sub.parentSectionId === currentSec.id);
+‏                if (currentSubs.length > 0) {
+‏                    if (!activeSubSectionId || !currentSubs.some(s => s.id === activeSubSectionId)) activeSubSectionId = currentSubs[0].id;
+‏                    let subBar = document.createElement('div');
+‏                    subBar.className = 'sub-categories-bar';
+‏                    currentSubs.forEach(sub => {
+‏                        subBar.innerHTML += `<div class="sub-category-tab ${sub.id === activeSubSectionId ? 'active' : ''}" onclick="activeSubSectionId='${sub.id}'; renderAppContent();">${sub.name}</div>`;
+                    });
+‏                    secDiv.appendChild(subBar);
+                }
+
+‏                secDiv.innerHTML += `<div class="search-bar-container"><input type="text" placeholder="ابحث..." value="${currentSearchQuery}" oninput="currentSearchQuery=this.value; renderAppContent();"></div>`;
+
+‏                let filtered = contents.filter(c => c.sectionId === currentSec.id);
+‏                if (activeSubSectionId) filtered = filtered.filter(c => c.subSectionId === activeSubSectionId);
+‏                if (currentSearchQuery.trim()) {
+‏                    filtered = filtered.filter(c => c.title.includes(currentSearchQuery));
+                }
+
+‏                if (filtered.length === 0) {
+‏                    secDiv.innerHTML += `<p style="color:var(--gray)">لا يوجد محتوى في هذا القسم.</p>`;
+‏                } else {
+‏                    let grid = document.createElement('div');
+‏                    grid.className = 'grid';
+‏                    for (let item of filtered) {
+‏                        let card = document.createElement('div');
+‏                        card.className = 'card';
+‏                        card.onclick = () => openContentModal(item.id);
+
+‏                        let previewHTML = '';
+‏                        if (item.thumbBlob) {
+‏                            previewHTML = `<img src="${URL.createObjectURL(item.thumbBlob)}">`;
+‏                        } else if (item.type === 'image' && item.mediaBlob) {
+‏                            previewHTML = `<img src="${URL.createObjectURL(item.mediaBlob)}">`;
+‏                        } else if (item.type === 'localvideo' && item.mediaBlob) {
+‏                            previewHTML = `<video src="${URL.createObjectURL(item.mediaBlob)}"></video>`;
+‏                        } else {
+‏                            previewHTML = `<div style="background:#333; height:100%; display:flex; align-items:center; justify-content:center; color:#fff;">مقال / يوتيوب</div>`;
+                        }
+
+‏                        let isLikedByUser = localStorage.getItem(`esultan_liked_item_${item.id}`) === 'true';
+
+‏                        card.innerHTML = `
+‏                            <div class="thumbnail-container">${previewHTML}</div>
+‏                            <div class="card-body">
+‏                                <div class="card-title">${item.title}</div>
+‏                                <div class="card-desc">${item.desc}</div>
+‏                                <div class="video-stats">
+‏                                    <span>👁️ ${item.views || 0}</span>
+‏                                    <button class="download-btn-card" onclick="downloadItemMedia(${item.id}, event)">📥 تنزيل</button>
+‏                                </div>
+‏                                <div class="card-actions-row">
+‏                                    <button class="like-btn ${isLikedByUser ? 'liked' : ''}" onclick="handleLike(${item.id}, event)">
+‏                                        <svg viewBox="0 0 24 24">
+‏                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+‏                                        </svg>
+‏                                        <span>${item.likes || 0}</span>
+‏                                    </button>
+‏                                </div>
+‏                                ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteContent(${item.id}, event)" style="background:#d9534f; color:white; border:none; padding:4px; border-radius:3px; margin-top:8px; width:100%;">حذف المحتوى</button>` : ''}
+‏                            </div>
+                        `;
+‏                        grid.appendChild(card);
+                    }
+‏                    secDiv.appendChild(grid);
+                }
+            }
+‏            area.appendChild(secDiv);
+        }
+
+‏        function verifySec(id) {
+‏            let sections = JSON.parse(localStorage.getItem('esultan_sections')) || [];
+‏            let sec = sections.find(s => s.id === id);
+‏            if (sec && document.getElementById(`pass_${id}`).value.trim() === sec.password) {
+‏                unlockedSections.add(id);
+‏                renderAppContent();
+‏            } else {
+‏                alert('كلمة المرور غير صحيحة');
+            }
+        }
+‏    </script>
+‏</body>
+‏</html>
